@@ -16,14 +16,14 @@
     workshop_rhsso_admin_password: admin
     workshop_openshift_user_password: openshift
     workshop_che_user_password: openshift
-    workshop_che_namespace: workshop-codeready
+    workshop_che_namespace: devspace
 
     # provision_webapp
     solution_explorer_client_id: tutorial-web-app
     solution_explorer_image_tag: '1.0.10'
     solution_explorer_image: 'quay.io/gcamposo/tutorial-web-app:{{ solution_explorer_image_tag }}'
     solution_explorer_namespace: "workshop-solution-explorer"
-    solution_explorer_walkthrough_locations: https://github.com/hodrigohamalho/kafka-zero-to-hero
+    solution_explorer_walkthrough_locations: https://github.com/hodrigohamalho/kafka-zero-to-hero?walkthroughsFolder=/labs#master
     
     branch: main
 
@@ -59,12 +59,11 @@
         - not delete_workshop
       include_role:
         name: username-distribution
-
-    - name: Provision CodeReady Workspaces
-      include_role:
-        name: codeready
-      when: not delete_workshop
-      tags: codeready
-
-
     
+    # - name: Provision OpenShift Dev Spaces
+    #   include_role:
+    #     name: devspaces
+    #   vars:
+    #     operators_project: "openshift-operators"
+    #     snapshot_operator_project: "openshift-marketplace"
+

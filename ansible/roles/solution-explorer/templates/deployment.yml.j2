@@ -51,7 +51,7 @@ spec:
             - name: NODE_ENV
               value: production
             - name: WALKTHROUGH_LOCATIONS
-              value: "{{ solution_explorer_walkthrough_locations|join(',') }}"
+              value: "{{ solution_explorer_walkthrough_locations }}"
             - name: INTEGREATLY_VERSION
               value: "{{ solution_explorer_image_tag }}"
             - name: DATABASE_LOCATION
