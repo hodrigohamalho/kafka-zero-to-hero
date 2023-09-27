@@ -1,14 +1,9 @@
 # Running Apache Kafka on OpenShift with AMQ streams
 
-These are the modules and related labs of the "Running Apache Kafka on OpenShift with AMQ streams" workshop at the Red Hat Summit 2019.
-
 Before starting, let's get familiar with the link:./environment.adoc[lab environment].
-
-The introductory slide deck is available link:https://speakerdeck.com/mbogoevici/running-apache-kafka-on-red-hat-openshift-with-amq-streams[here].
 
 # Outline
 
-## Module 1
 
 . link:../labs/0-to-60.adoc[AMQ Streams on OpenShift from 0 to 60]
 
@@ -16,14 +11,16 @@ The introductory slide deck is available link:https://speakerdeck.com/mbogoevici
 
 . link:../labs/topic-management.adoc[Topic management]
 
-## Module 2
+. link:../labs/understanding-the-application-ecosystem.adoc[Understanding the Kafka application ecosystem]
 
 . link:../labs/clients-within-outside-OCP.adoc[Clients: within OCP and outside OCP]
 
 . link:../labs/security.adoc[Security]
 
-## Module 3
+. link:../labs/watching-multiple-namespaces-short-1.1.adoc[Watching multiple namespaces]
 
-. link:../labs/mirror-maker-single-namespace.adoc[Replicating Data with MirrorMaker]
+. link:../labs/mirror-maker.adoc[Replicating Data with MirrorMaker]
+
+. link:../labs/kafka-connect.adoc[Running KafkaConnect applications]
 
 . link:../labs/management-monitoring.adoc[Management and monitoring]
