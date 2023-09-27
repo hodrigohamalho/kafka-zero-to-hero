@@ -76,9 +76,11 @@ https://docs.google.com/presentation/d/1CI5eRojj2KkcG_KmZtsRr_N75Y8vFEM6g-EVrpqI
 | delete_workshop | false | Only use this parameter if you intend to delete the installation and preserve the cluster.
 |=======================
 
+----
 export tkn=sha256~UNFpoNDl1kPJ-nEhUzt-hljRpCBndpk66t1UycKj4Z4
 export server=https://api.cluster-96npr.96npr.sandbox1420.opentlc.com:6443
 export num_users=1
+----
 
 === Running the playbook
 
