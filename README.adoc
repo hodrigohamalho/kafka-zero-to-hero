@@ -90,11 +90,7 @@ export num_users=1
 export tkn=CHANGEME
 export server=CHANGEME
 export num_users=CHANGEME
-----
 
-=== Install the Workshop
-
-----
 cd ansible
 
 ansible-playbook -e token=${tkn} -e server=${server} -e num_users=${num_users} playbook.yml
