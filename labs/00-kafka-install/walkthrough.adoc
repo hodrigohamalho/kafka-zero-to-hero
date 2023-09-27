@@ -1,11 +1,9 @@
-:walkthrough: Workshop introduction - Environment Setup
+:walkthrough: Welcome and Installing Kafka
 :codeready-url: {che-url}
 :openshift-url: {openshift-host}
 :user-password: openshift
 
-= Lab 0 - Workshop Introduction - Environment setup
-
-Learn how to set up your environment and tools available for this workshop.
+= Lab 0 - Welcome and Installing Kafka
 
 Welcome to the Kafka Zero to Hero Workshop! It's a pleasure to guide you on this hands-on experience.
 

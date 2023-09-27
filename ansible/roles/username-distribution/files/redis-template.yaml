@@ -90,7 +90,7 @@ objects:
               secretKeyRef:
                 key: database-password
                 name: ${DATABASE_SERVICE_NAME}
-          image: ' '
+          image: 'registry.redhat.io/rhel8/redis-5'
           imagePullPolicy: IfNotPresent
           livenessProbe:
             initialDelaySeconds: 30
