@@ -24,14 +24,9 @@ metadata:
     openshift.io/support-url: https://access.redhat.com
     samples.operator.openshift.io/version: 4.4.3
     tags: database,redis
-  creationTimestamp: "2020-05-21T11:54:38Z"
   labels:
     samples.operator.openshift.io/managed: "true"
   name: redis-persistent
-  namespace: openshift
-  resourceVersion: "18076"
-  selfLink: /apis/template.openshift.io/v1/namespaces/openshift/templates/redis-persistent
-  uid: 88513b62-c75a-4aea-861e-62722bfe49d8
 objects:
 - apiVersion: v1
   kind: Secret
