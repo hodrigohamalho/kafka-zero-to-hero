@@ -9,6 +9,7 @@
     delete_workshop: false
     ocp_username: opentlc-mgr
     debug_enable: false
+    num_users: 1
 
     # CHE configuration
     workshop_rhsso_admin_user_name: admin
@@ -40,7 +41,7 @@
         console_url: "https://console-openshift-console.{{ route_subdomain }}"
 
     - name: Log in as super user with token on OpenShift 4
-      command: "oc login --token={{ token }}  --server={{ server }} --insecure-skip-tls-verify={{ insecure_skip_tls_verify }}"
+      command: "oc login --token={{ tkn }}  --server={{ server }} --insecure-skip-tls-verify={{ insecure_skip_tls_verify }}"
       when:
        - token is defined
        - token is not none

@@ -8,5 +8,5 @@ spec:
   resources:
     requests:
       storage: 100Mi
-  storageClassName: gp2
+  storageClassName: gp2-csi
   volumeMode: Filesystem
