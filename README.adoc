@@ -63,6 +63,47 @@ https://docs.google.com/presentation/d/1CI5eRojj2KkcG_KmZtsRr_N75Y8vFEM6g-EVrpqI
 
 . link:./labs/management-monitoring.adoc[Management and monitoring]
 
+== Using the Ansible playbook
+
+=== Parameters
+
+[options="header"]
+|=======================
+| Parameter | Example Value                                      | Definition
+| tkn | sha256~vFanQbthlPKfsaldJT3bdLXIyEkd7ypO_XPygY1DNtQ | Access token for a user with cluster-admin privileges.
+| server    | https://api.cluster-xyz.xyz.sandbox9999.opentlc.com:6443                             | The cluster's OpenShift API URL
+| num_users | 8                                                  | Number of users attending the workshop. Have in mind that the more users you have, more resources you are going to need from the cluster.
+| delete_workshop | false | Only use this parameter if you intend to delete the installation and preserve the cluster.
+|=======================
+
+export tkn=sha256~UNFpoNDl1kPJ-nEhUzt-hljRpCBndpk66t1UycKj4Z4
+export server=https://api.cluster-96npr.96npr.sandbox1420.opentlc.com:6443
+export num_users=1
+
+=== Running the playbook
+
+- Replace the environment variable values:
+
+----
+export tkn=CHANGEME
+export server=CHANGEME
+export num_users=CHANGEME
+----
+
+=== Install the Workshop
+
+----
+cd ansible
+
+ansible-playbook -e token=${tkn} -e server=${server} -e num_users=${num_users} playbook.yml
+----
+
+=== Getting the user registration page
+
+The URL will be displayed by the `Installation Finished` task.
+
+image::./images/user-distribution-console.PNG[User Distribution]
+
 === Contributing
 
 We welcome all forms of contribution (content, issues/bugs, feedback).

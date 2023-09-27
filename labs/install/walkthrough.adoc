@@ -1,0 +1,110 @@
+:walkthrough: Workshop introduction - Environment Setup
+:codeready-url: {che-url}
+:openshift-url: {openshift-host}
+:user-password: openshift
+
+= Lab 0 - Workshop Introduction - Environment setup
+
+Learn how to set up your environment and tools available for this workshop.
+
+Welcome to the Kafka Zero to Hero Workshop! It's a pleasure to guide you on this hands-on experience.
+
+This workshop aims to offer you practical experience with Red Hat AMQ Streams, that is the productized and supported version of https://strimzi.io[Strimzi.io]. It is not meant to be a complete training of AMQ Streams. For this purpose we have amazing courses here https://www.redhat.com/en/services/training-and-certification[training and certification], covering many aspects of Red Hat AMQ Streams in depth.
+
+The main objective is to cover as many Kafka aspects during this workshop.
+
+[type=walkthroughResource,serviceName=codeready]
+.CodeReady Workspaces
+****
+* link:{codeready-url}[Console, window="_blank"]
+* link:https://developers.redhat.com/products/codeready-workspaces/overview/[Want to know more about CodeReady Workspaces?, window="_blank"]
+****
+
+[type=walkthroughResource,serviceName=openshift]
+.OpenShift Console
+****
+* link:{openshift-url}[Console, window="_blank"]
+****
+
+[time=5]
+== Setup CodeReady Workspaces
+
+These walkthroughs use link:https://developers.redhat.com/products/codeready-workspaces/overview[CodeReady Workspaces, window="_blank"] (based on https://www.eclipse.org/che[Eclipse Che]).
+It's an IDE on the cloud based on containers. You can also use a local development environment if you'd prefer (i.e. https://code.visualstudio.com[Visual Studio Code], https://developers.redhat.com/products/codeready-studio/overview[Red Hat CodeReady Studio] (formerly known as JBoss Developer Studio), https://www.jetbrains.com/idea[IntelliJ IDEA], etc).
+
+There are several projects into the workspace that we will be using during the labs.
+
+Open the IDE link:{codeready-url}/dashboard[CodeReady Workspaces, window="_blank"]
+
+Credentials:
+
+* Username: `{user-username}`
+* Password: `{user-password}`
+
+{empty} +
+
+On the opened page, click on the workspace as showed in the picture:
+
+image::images/01-workspace.png[Che Workspace, role="integr8ly-img-responsive"]
+
+{empty} +
+
+During the import some questions will appear in the right bottom corner, just confirm all questions.
+
+image::images/01-importing-workspace.png[Che Workspace, role="integr8ly-img-responsive"]
+
+{empty} +
+
+Confirm to Restart the workspace.
+
+image::images/01-restart-workspace.png[Che Workspace, role="integr8ly-img-responsive"]
+
+{empty} +
+
+When the setup is ready (be patient it can take some minutes), you should see a screen like this:
+
+image::images/2-workspace-created.png[Importing project, role="integr8ly-img-responsive"]
+
+{empty} +
+
+Now that you successfully started your workspace, take some time exploring the project structure using the `left menu`.
+
+=== Running the project
+
+On the right menu, click on the cube icon. Under the tools menu, click on `run app locally`. You should see the application build starting and then application running.
+
+image::images/4-run-app-locally.png[Running Application, role="integr8ly-img-responsive"]
+
+{empty} +
+
+As this is a web application, we are going to explore it in future labs, CodeReady Workspaces will suggest to you to open a link. Click on  `yes` and then `Open Link`.
+
+image::images/5-open-web-app-1.png[Running Application, role="integr8ly-img-responsive"]
+
+{empty} +
+
+image::images/5-open-web-app-2.png[Running Application, role="integr8ly-img-responsive"]
+
+{empty} +
+
+In the end you should see a web app on the side menu, and a `hello router` message in the logs.
+
+image::images/6-lab-final.png[Running Application, role="integr8ly-img-responsive"]
+
+{empty} +
+
+To stop the application use `Ctrl+C` in the terminal.
+
+[time=5]
+[type=verification]
+Are you seeing a loop hello message in the logs?
+
+
+[time=1]
+== Summary
+
+Congratulations, you finished the setup of your environment!
+
+In this lab, you learned how to set up a Camel on Quarkus project using CodeReady Workspaces.
+
+You can now proceed to `Hello Router Lab`.
