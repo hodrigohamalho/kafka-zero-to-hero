@@ -1,0 +1,6 @@
+- name: Evaluate logging
+  k8s:
+    state: present
+    namespace: '{{ namespace }}'
+    resource_definition: "{{ lookup('file', 'logging.yml') }}"
+

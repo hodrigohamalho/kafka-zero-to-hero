@@ -1,0 +1,52 @@
+- name: Evaluate {{ solution_explorer_namespace }} Project
+  k8s:
+    api_version: v1
+    kind: Namespace
+    name: '{{ solution_explorer_namespace }}'
+    state: present
+
+- name: Evaluate Solution Explorer PVC
+  k8s:
+    state: present
+    namespace: '{{ solution_explorer_namespace }}'
+    resource_definition: '{{ lookup("file", "pvc.yml") }}'
+
+- name: Evaluate Solution Explorer DeploymentConfig
+  k8s:
+    state: present
+    namespace: '{{ solution_explorer_namespace }}'
+    resource_definition: '{{ lookup("template", "deployment.yml.j2") }}'
+
+- name: Evaluate Solution Explorer Service
+  k8s:
+    state: present
+    namespace: '{{ solution_explorer_namespace }}'
+    resource_definition: '{{ lookup("file", "svc.yml") }}'
+
+- name: Evaluate Solution Explorer Route
+  k8s:
+    state: present
+    namespace: '{{ solution_explorer_namespace }}'
+    resource_definition: '{{ lookup("file", "route.yml") }}'
+
+- name: Get webapp secure route
+  k8s_info:
+    kind: Route
+    name: '{{ solution_explorer_client_id }}'
+    namespace: '{{ solution_explorer_namespace }}'
+    api_version: route.openshift.io/v1
+  register: webapp_secure_route
+  until: >-
+    (webapp_secure_route.resources is defined)
+    and (webapp_secure_route.resources|length>0)
+  retries: 10
+  delay: 30
+
+- name: Retrieve Route
+  set_fact:
+    webapp_secure_route: "{{ webapp_secure_route.resources[0].spec.host }}"
+
+- name: Create OpenShift OAuth client
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'oauth-client.yml.j2') }}"

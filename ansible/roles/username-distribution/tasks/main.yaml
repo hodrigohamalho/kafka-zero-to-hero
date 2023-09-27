@@ -1,0 +1,122 @@
+- name: Evaluate {{ solution_explorer_namespace }} project
+  when: num_users | int > 0
+  k8s:
+    api_version: v1
+    kind: Namespace
+    name: '{{ solution_explorer_namespace }}'
+
+- name: search for username distribution tool
+  k8s_info:
+    kind: DeploymentConfig
+    name: get-a-username
+    namespace: '{{ solution_explorer_namespace }}'
+  register: r_gau_dc
+
+- name: search for Redis
+  k8s_info:
+    kind: DeploymentConfig
+    name: redis
+    namespace: '{{ solution_explorer_namespace }}'
+  register: r_redis_dc
+
+- name: Deploy Redis
+  when:
+    - r_gau_dc.resources | list | length == 0
+    - r_redis_dc.resources | list | length == 0
+  shell: >
+    oc process -f -
+    -p DATABASE_SERVICE_NAME=redis
+    -p REDIS_PASSWORD=redis
+    -p VOLUME_CAPACITY=1Gi
+    -p MEMORY_LIMIT=1Gi
+    -p REDIS_VERSION=5
+    | oc create -n {{ solution_explorer_namespace }}  -f -
+  args:
+    stdin: "{{ lookup('file', 'redis-template.yaml') }}"
+
+- name: Wait for redis to be ready
+  when: r_gau_dc.resources | list | length == 0
+  k8s_info:
+    api_version: v1
+    kind: Pod
+    namespace: '{{ solution_explorer_namespace }}'
+    label_selectors:
+      - name = redis
+      - deploymentconfig = redis
+    field_selectors:
+      - status.phase=Running
+  register: r_redis_pod
+  retries: 120
+  delay: 10
+  until: r_redis_pod.resources | list | length == 1
+
+- name: Deploy username distribution tool
+  when: r_gau_dc.resources | list | length == 0
+  shell: >
+    oc -n {{ solution_explorer_namespace }} new-app --as-deployment-config quay.io/openshiftlabs/username-distribution:1.4 --name=get-a-username
+    -e LAB_REDIS_HOST=redis
+    -e LAB_REDIS_PASS=redis
+    -e LAB_TITLE={{ 'Camel workshop' | quote }}
+    -e LAB_DURATION_HOURS=1week
+    -e LAB_USER_COUNT={{ num_users }}
+    -e LAB_USER_ACCESS_TOKEN={{ workshop_openshift_user_password }}
+    -e LAB_USER_PASS={{ workshop_openshift_user_password }}
+    -e LAB_USER_PREFIX=user
+    -e LAB_USER_PAD_ZERO=false
+    -e LAB_ADMIN_PASS={{ workshop_openshift_user_password }}
+    -e LAB_MODULE_URLS='https://{{ webapp_secure_route }};Solution Explorer'
+    -e LAB_EXTRA_URLS='{{console_url}};OpenShift Console,https://codeready-{{ workshop_che_namespace }}.{{ route_subdomain}};CodeReady Workspaces Console'
+
+- name: expose username distribution tool
+  when: r_gau_dc.resources | list | length == 0
+  k8s:
+    api_version: route.openshift.io/v1
+    namespace: '{{ solution_explorer_namespace }}'
+    state: present
+    kind: Route
+    definition:
+      metadata:
+        name: get-a-username
+        labels:
+          app: get-a-username
+      spec:
+        host: ''
+        to:
+          kind: Service
+          name: get-a-username
+          weight: 100
+        port:
+          targetPort: 8080-tcp
+        tls:
+          termination: edge
+          insecureEdgeTerminationPolicy: Allow
+  register: Route
+
+- name: Get User Distribution Route
+  k8s_info:
+    kind: Route
+    name: get-a-username
+    namespace: '{{ solution_explorer_namespace }}'
+    api_version: route.openshift.io/v1
+  register: user_distribution_route
+
+- name: Set user_distribution_url
+  set_fact:
+    user_distribution_url: "{{ user_distribution_route.resources[0].spec.host }}"
+
+- name: initialize username array
+  set_fact:
+    users: []
+
+- name: create usernames
+  set_fact:
+    users: "{{ users + ['user'+item | string] }}"
+  loop: "{{ range(1,((num_users | int) + 1)) | list }}"
+
+- name: create projects for users
+  include_tasks: create_project.yaml
+  vars:
+    t_project_name: "{{ t_user }}-project"
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: t_user

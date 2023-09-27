@@ -1,0 +1,69 @@
+- hosts: localhost
+  name: Debezium database migration
+  vars:
+    server: https://api.cluster-6x8wc.6x8wc.sandbox773.opentlc.com:6443
+    kafka_cluster: my-source-cluster
+    grafana_user: admin
+    grafana_password: admin
+    insecure_skip_tls_verify: true
+    delete_workshop: false
+    ocp_username: opentlc-mgr
+    debug_enable: false
+
+    # CHE configuration
+    workshop_rhsso_admin_user_name: admin
+    workshop_rhsso_admin_password: admin
+    workshop_openshift_user_password: openshift
+    workshop_che_user_password: openshift
+    workshop_che_namespace: workshop-codeready
+
+    # provision_webapp
+    solution_explorer_client_id: tutorial-web-app
+    solution_explorer_image_tag: '1.0.10'
+    solution_explorer_image: 'quay.io/gcamposo/tutorial-web-app:{{ solution_explorer_image_tag }}'
+    solution_explorer_namespace: "workshop-solution-explorer"
+    solution_explorer_walkthrough_locations: https://github.com/hodrigohamalho/kafka-zero-to-hero
+    
+    branch: main
+
+  tasks:
+    - name: Define domain
+      set_fact:
+        domain : "{{ server | regex_replace('https://api.') | regex_replace(':6443') }}"
+
+    - name: Set route_subdomain
+      set_fact:
+        route_subdomain: "apps.{{ domain }}"
+
+    - name: Set console_url
+      set_fact:
+        console_url: "https://console-openshift-console.{{ route_subdomain }}"
+
+    - name: Log in as super user with token on OpenShift 4
+      command: "oc login --token={{ token }}  --server={{ server }} --insecure-skip-tls-verify={{ insecure_skip_tls_verify }}"
+      when:
+       - token is defined
+       - token is not none
+       - token|trim() != ""
+      ignore_errors: no
+
+    - name: Include Solution Explorer Role
+      include_role:
+        name: solution-explorer
+      when: not delete_workshop
+
+    - name: Include Username Distribution
+      when:
+        - num_users | int > 0
+        - not delete_workshop
+      include_role:
+        name: username-distribution
+
+    - name: Provision CodeReady Workspaces
+      include_role:
+        name: codeready
+      when: not delete_workshop
+      tags: codeready
+
+
+    

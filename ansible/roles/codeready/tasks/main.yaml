@@ -1,0 +1,135 @@
+# Install CRW via operator
+- name: Evaluate {{ workshop_che_namespace }} namespace
+  k8s:
+    state: present
+    kind: Project
+    api_version: project.openshift.io/v1
+    definition:
+      metadata:
+        name: "{{ workshop_che_namespace }}"
+        annotations:
+          openshift.io/description: ""
+          openshift.io/display-name: "CodeReady Project"
+
+# deploy codeready operator
+- name: Evaluate OperatorGroup
+  k8s:
+    state: present
+    namespace: '{{ workshop_che_namespace }}'
+    resource_definition: "{{ lookup('template', 'codeready_operatorgroup.yaml.j2') }}"
+
+- name: Evaluate Subscription
+  k8s:
+    state: present
+    namespace: '{{ workshop_che_namespace }}'
+    resource_definition: "{{ lookup('file', 'codeready_subscription.yaml') }}"
+
+# wait for CRD to be a thing
+- name: Wait for CodeReady CRD to be Ready
+  k8s_info:
+    api_version: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    name: checlusters.org.eclipse.che
+  register: r_codeready_crd
+  retries: 200
+  delay: 10
+  until: r_codeready_crd.resources | list | length == 1
+
+# deploy codeready CR
+- name: Create CR for CodeReady
+  k8s:
+    state: present
+    namespace: '{{ workshop_che_namespace }}'
+    merge_type:
+    - strategic-merge
+    - merge
+    resource_definition: "{{ lookup('file', 'codeready_cr.yaml') }}"
+
+# wait for che to be up
+- name: Wait for CRW to be running
+  uri:
+    url: https://codeready-{{ workshop_che_namespace }}.{{ route_subdomain }}/dashboard/
+    validate_certs: false
+  register: result
+  until: result.status == 200
+  retries: "120"
+  delay: "30"
+
+- name: Get CodeReady keycloak deployment
+  k8s_info:
+    kind: Deployment
+    namespace: '{{ workshop_che_namespace }}'
+    name: keycloak
+  register: r_keycloak_deployment
+
+- name: show cr
+  when: debug_enable
+  debug:
+    msg: "existing keycloak deployment: {{ r_keycloak_deployment }}"
+
+- name: set codeready username fact
+  set_fact:
+    codeready_sso_admin_username: "{{ r_keycloak_deployment.resources[0].spec.template.spec.containers[0].env | selectattr('name','equalto','SSO_ADMIN_USERNAME') |map (attribute='value') | list | first }}"
+
+- name: set codeready password fact
+  set_fact:
+    codeready_sso_admin_password: "{{ r_keycloak_deployment.resources[0].spec.template.spec.containers[0].env | selectattr('name','equalto','SSO_ADMIN_PASSWORD') |map (attribute='value') | list | first }}"
+
+- name: show codeready keycloak admin username
+  when: debug_enable
+  debug:
+    msg: "codeready keycloak admin username: {{ codeready_sso_admin_username }}"
+
+- name: show codeready keycloak admin password
+  when: debug_enable
+  debug:
+    msg: "codeready keycloak admin password: {{ codeready_sso_admin_password }}"
+
+- name: Create Codeready Users
+  include_tasks: add_che_user.yaml
+  vars:
+    user: "{{ item }}"
+  with_list: "{{ users }}"
+
+- name: Get Codeready SSO admin token
+  uri:
+    url: https://keycloak-{{ workshop_che_namespace }}.{{ route_subdomain }}/auth/realms/master/protocol/openid-connect/token
+    validate_certs: false
+    method: POST
+    body:
+      username: "{{ codeready_sso_admin_username }}"
+      password: "{{ codeready_sso_admin_password }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    body_format: form-urlencoded
+    status_code: 200,201,204
+  register: codeready_sso_admin_token
+
+- name: Increase CodeReady access token lifespans
+  uri:
+    url: https://keycloak-{{ workshop_che_namespace }}.{{ route_subdomain }}/auth/admin/realms/codeready
+    validate_certs: false
+    method: PUT
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ codeready_sso_admin_token.json.access_token }}"
+    body:
+      accessTokenLifespan: 28800
+      accessTokenLifespanForImplicitFlow: 28800
+      actionTokenGeneratedByUserLifespan: 28800
+      ssoSessionIdleTimeout: 28800
+      ssoSessionMaxLifespan: 28800
+    body_format: json
+    status_code: 204
+
+- name: Create and pre-warm user workspaces
+  include_tasks: create_workspace.yml
+  vars:
+    user: "{{ item }}"
+  with_list: "{{ users }}"
+  when:
+    - num_users|int > 0
+
+- name: Import Fuse Base Image
+  command: "oc import-image {{ fuse_base_image }}:{{ fuse_base_image_tag }} --from={{ fuse_base_image_repo }}/{{ fuse_base_image }}:{{ fuse_base_image_tag }} --confirm -n openshift"
+  ignore_errors: no

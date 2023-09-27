@@ -1,0 +1,10 @@
+apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry
+metadata:
+  name: service-registry
+  namespace: poc
+spec:
+  configuration:
+    kafkasql:
+      bootstrapServers: 'my-source-cluster-kafka-bootstrap.poc.svc:9092'
+    persistence: kafkasql

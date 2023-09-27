@@ -1,0 +1,23 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: debezium-oracle-connector
+  labels:
+    strimzi.io/cluster: debezium-connect-cluster
+spec:
+{
+    "name": "jdbc-connector",  
+    "config": {
+        "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",  
+        "tasks.max": "1",  
+        "connection.url": ""jdbc:oracle:thin:@oracle-19c-orapoc.poc.svc:1521/ORAPOCPDB"",  
+        "connection.username": "ot",  
+        "connection.password": "Orcl1234",  
+        "insert.mode": "upsert",  
+        "delete.enabled": "true",  
+        "primary.key.mode": "record_key",  
+        "schema.evolution": "basic",  
+        "table.name.format": "ot.orders"
+        "database.time_zone": "UTC"  
+    }
+}

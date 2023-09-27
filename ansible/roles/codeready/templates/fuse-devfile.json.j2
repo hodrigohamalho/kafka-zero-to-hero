@@ -1,0 +1,113 @@
+{
+  "apiVersion": "1.0.0",
+  "metadata": {
+    "name": "camel-workshop"
+  },
+  "projects": [
+    {
+      "name": "camel-workshop",
+      "source": {
+        "type": "git",
+        "location": "https://github.com/hodrigohamalho/camel-workshop.git",
+        "branch": "{{ branch }}"
+      }
+    }
+  ],
+  "components": [
+    {
+      "type": "chePlugin",
+      "id": "redhat/vscode-apache-camel/latest"
+    },
+    {
+      "type": "chePlugin",
+      "id": "redhat/vscode-openshift-connector/latest"
+    },
+    {
+      "type": "dockerimage",
+      "alias": "tools",
+      "image": "registry.redhat.io/codeready-workspaces/plugin-java11-rhel8:2.15",
+      "env": [
+        {
+          "name": "MAVEN_CONFIG",
+          "value": ""
+        },
+        {
+          "name": "JAVA_OPTS",
+          "value": "-XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xms20m -Djava.security.egd=file:/dev/./urandom -Duser.home=/home/user"
+        },
+        {
+          "name": "MAVEN_OPTS",
+          "value": "$(JAVA_OPTS)"
+        }
+      ],
+      "memoryLimit": "4294Mi",
+      "endpoints": [
+        {
+          "name": "8080-tcp",
+          "port": 8080
+        },
+        {
+          "name": "debug",
+          "port": 5005,
+          "attributes": {
+            "public": "false"
+          }
+        }
+      ],
+      "mountSources": true,
+      "volumes": [
+        {
+          "name": "m2",
+          "containerPath": "/home/user/.m2"
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "name": "maven build",
+      "actions": [
+        {
+          "type": "exec",
+          "component": "tools",
+          "command": "mvn clean install",
+          "workdir": "${CHE_PROJECTS_ROOT}/camel-workshop"
+        }
+      ]
+    },
+    {
+      "name": "log in openshift",
+      "actions": [
+        {
+          "type": "exec",
+          "component": "tools",
+          "command": "oc login -p openshift -u {{ user }} --server=https://api.{{ domain }}:6443 --insecure-skip-tls-verify={{ insecure_skip_tls_verify }} && oc project {{ user }}-project",
+          "workdir": "${CHE_PROJECTS_ROOT}/camel-workshop"
+        }
+      ]
+    },
+
+    {
+      "name": "run app locally",
+      "actions": [
+        {
+          "type": "exec",
+          "component": "tools",
+          "command": "mvn compile quarkus:dev\n",
+          "workdir": "${CHE_PROJECTS_ROOT}/camel-workshop"
+        }
+      ]
+    },
+    {
+      "name": "deploy to openshift",
+      "actions": [
+        {
+          "type": "exec",
+          "component": "tools",
+          "command": "mvn clean package -DskipTests -Dopenshift \n",
+          "workdir": "${CHE_PROJECTS_ROOT}/camel-workshop"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+- name: Provision User Monitoring
+  include_tasks: provision_monitoring.yml
+
+- name: Configure User Monitoring
+  include_tasks: configure_monitoring.yml

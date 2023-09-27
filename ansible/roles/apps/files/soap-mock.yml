@@ -1,0 +1,66 @@
+﻿kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: 'false'
+  name: soapmock
+  labels:
+    app: soapmock
+    app.kubernetes.io/component: soapmock
+    app.kubernetes.io/instance: soapmock
+    app.kubernetes.io/name: soapmock
+    app.kubernetes.io/part-of: aplicacoes
+    app.openshift.io/runtime: camel
+    app.openshift.io/runtime-namespace: poc
+    app-with-metrics: quarkus-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: soapmock
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: soapmock
+        deployment: soapmock
+    spec:
+      containers:
+        - name: soapmock
+          image: >-
+            quay.io/hodrigohamalho/soap-mock-jvm
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: soapmock
+  namespace: poc
+  labels:
+    app: soapmock
+    app.kubernetes.io/component: soapmock
+    app.kubernetes.io/instance: soapmock
+    app.kubernetes.io/name: soapmock
+    app.kubernetes.io/part-of: aplicacoes
+    app.openshift.io/runtime: camel
+    app.openshift.io/runtime-namespace: poc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  selector:
+    app: soapmock

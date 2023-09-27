@@ -1,0 +1,27 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: oracle-sink-connector
+  labels:
+    strimzi.io/cluster: debezium-connect-cluster
+    app: oracle-sink-connector
+    app.kubernetes.io/component: oracle-sink-connector
+    app.kubernetes.io/instance: oracle-sink-connector
+    app.kubernetes.io/name: oracle-sink-connector
+    app.kubernetes.io/part-of: cdc
+    app.openshift.io/runtime: camel
+spec:
+  class: org.apache.camel.kafkaconnector.oracledatabasesink.CamelOracledatabasesinkSinkConnector
+  config:
+    camel.sink.unmarshal: json-jackson
+    camel.sink.path.query: >-
+      INSERT INTO ot.orders (order_id,type,flavor,quantity,price,sender_user)
+      VALUES(:#OrderId,:#OrderType,:#OrderItemName,:#Quantity,:#Price,:#OrderUser)
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    topics: mssql-server-linux.dbo.Orders
+    camel.component.sql.dataSource.user: ot
+    camel.component.sql.dataSource.password: Orcl1234
+    camel.component.sql.dataSource: '#class:oracle.jdbc.pool.OracleDataSource'
+    camel.component.sql.dataSource.url: 'jdbc:oracle:thin@//@oracle-19c-orapoc:1521/ORAPOCPDB'
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+  tasksMax: 1

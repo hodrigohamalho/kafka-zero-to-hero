@@ -1,0 +1,248 @@
+CREATE TABLE PMGHDREE
+(
+  PMG_PO_NUMBER      NUMBER(12)                 NOT NULL,
+  VPC_TECH_KEY       NUMBER(12),
+  VPC_SHP_POINT      NUMBER(6),
+  PMG_TYPE_CODE      NUMBER(12),
+  PMG_STAT_CODE      NUMBER(5),
+  PMG_TRACK_CODE     NUMBER(5),
+  PMG_USER           CHAR(10 BYTE),
+  PMG_LC_NUMBER      VARCHAR2(20 BYTE),
+  PMG_SHIP_VIA       VARCHAR2(20 BYTE),
+  USR_TECH_KEY       NUMBER(12),
+  VPC_APT_KEY        NUMBER(12),
+  PMG_FOB            VARCHAR2(20 BYTE),
+  CURR_CODE          CHAR(3 BYTE),
+  PMG_EFFECT_DATE    DATE,
+  PMG_RATE           NUMBER(9,3),
+  DMT_CODE           NUMBER(1),
+  TRF_ALLOC_ID       NUMBER(2),
+  CNTRY_LVL_CHILD    NUMBER(12),
+  PMG_ENTRY_DATE     DATE,
+  PMG_RELEASE_DATE   DATE,
+  PMG_SHIP_DATE      DATE,
+  PMG_CANCEL_DATE    DATE,
+  PMG_EXP_RCT_DATE   DATE,
+  PMG_PAY_DATE       DATE,
+  PMG_TOT_CASE_QTY   NUMBER(10,3),
+  PMG_TOT_SELL_QTY   NUMBER(10,3),
+  PMG_TOT_PO_COST    NUMBER(14,3),
+  PMG_TOT_REC_COST   NUMBER(14,3),
+  DOWNLOAD_DATE      DATE,
+  PRINT_DATE         DATE,
+  PMG_LAST_TRAN_DT   DATE,
+  PMG_LAST_CHG_DT    DATE,
+  PMG_LAST_CHG_USR   NUMBER(12),
+  PMG_TRAN_STATUS    NUMBER(1),
+  DISTRO_ID          NUMBER(12),
+  CAP_CHAIN_ID       NUMBER(12),
+  TOT_CHG_EFFECT     NUMBER(13,3),
+  TOT_CHG_NO_EFFECT  NUMBER(13,3),
+  TOT_ALL_EFFECT     NUMBER(13,3),
+  TOT_ALL_NO_EFFECT  NUMBER(13,3),
+  ALW_CHG_FLAG       CHAR(1 BYTE),
+  TOT_CHG_EFFECT_HM  NUMBER(13,3),
+  TOT_CHG_NO_EFF_HM  NUMBER(13,3),
+  TOT_ALL_EFFECT_HM  NUMBER(13,3),
+  TOT_ALL_NO_EFF_HM  NUMBER(13,3),
+  PMG_TOT_COST_HM    NUMBER(14,3),
+  PMG_TOT_RTL_HM     NUMBER(14,3),
+  PMG_CHG_PENDING    CHAR(1 BYTE)
+)
+PCTUSED    0
+PCTFREE    10
+INITRANS   1
+MAXTRANS   255
+STORAGE    (
+            INITIAL          4M
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOLOGGING 
+NOCOMPRESS 
+NOCACHE
+MONITORING;
+
+
+CREATE INDEX INDX_PMGHDREE_PEDA ON PMGHDREE
+(PMG_ENTRY_DATE)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX INDX_PMGHDREE_PEDAX_2 ON PMGHDREE
+(PMG_EXP_RCT_DATE)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          128K
+            NEXT             128K
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX INDX_PMGHDREE_PO_CHAR ON PMGHDREE
+(TO_CHAR("PMG_PO_NUMBER"))
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          128K
+            NEXT             128K
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX INDX_PMGH_PCDA ON PMGHDREE
+(PMG_CANCEL_DATE)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX PMGHDREEI2 ON PMGHDREE
+(VPC_TECH_KEY)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          128K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX PMGHDREEI3 ON PMGHDREE
+(PMG_STAT_CODE, PMG_RELEASE_DATE, PMG_EXP_RCT_DATE)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          4M
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX PMGHDREEI4 ON PMGHDREE
+(PMG_EXP_RCT_DATE, PMG_STAT_CODE)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          4M
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX PMGHDREEI5 ON PMGHDREE
+(PMG_PO_NUMBER, VPC_TECH_KEY, PMG_STAT_CODE)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          4M
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX PMGHDREEI6 ON PMGHDREE
+(USR_TECH_KEY)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX PMGHDREEI7 ON PMGHDREE
+(DMT_CODE)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE INDEX PMGHDREEI8 ON PMGHDREE
+(PMG_TYPE_CODE)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );
+
+CREATE UNIQUE INDEX PMGHDREEP1 ON PMGHDREE
+(PMG_PO_NUMBER)
+NOLOGGING
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          128K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );

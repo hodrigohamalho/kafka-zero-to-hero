@@ -1,0 +1,29 @@
+apiVersion: camel.apache.org/v1alpha1
+kind: KameletBinding
+metadata:
+  name: oracle-database-sink-binding
+spec:
+  source:
+    ref:
+      kind: KafkaTopic
+      apiVersion: kafka.strimzi.io/v1beta1
+      name: mssql-server-linux.dbo.Orders
+    properties:
+      brokers: "my-source-cluster-kafka-bootstrap.poc.svc:9092"
+  sink:
+    ref:
+      kind: Kamelet
+      apiVersion: camel.apache.org/v1alpha1
+      name: oracle-database-sink
+    properties:
+      serverName: "oracle-19c-orapoc.poc.svc"
+      serverPort: 1521
+      databaseName: "ORAPOCPDB"
+      username: ot
+      password: Orcl1234
+      query: >-
+        INSERT INTO ot.orders (order_id,type,flavor,quantity,price,sender_user) 
+        VALUES(:#OrderId,:#OrderType,:#OrderItemName,:#Quantity,:#Price,:#OrderUser)
+  integration:
+    dependencies:
+      - mvn:com.oracle.database.jdbc:ojdbc11:21.1.0.0

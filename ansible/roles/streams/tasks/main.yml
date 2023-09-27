@@ -1,0 +1,5 @@
+- name: Provision AMQ Streams
+  include_tasks: provision.yml
+
+- name: Delete Monitoring
+  include_tasks: delete.yml

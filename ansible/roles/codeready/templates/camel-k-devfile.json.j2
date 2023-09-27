@@ -1,0 +1,40 @@
+{
+  "apiVersion": "1.0.0",
+  "metadata": {
+    "name": "camelk-workspace"
+  },
+  "components": [
+  {
+    "type": "chePlugin",
+    "id": "redhat/vscode-apache-camel/latest",
+  },
+   {
+    "type": "chePlugin",
+    "id": "redhat/vscode-xml/latest",
+   },
+  {
+    "type": "chePlugin",
+    "id": "redhat/vscode-camelk/latest"
+  },
+    {
+      "type": "dockerimage",
+      "alias": "camelk-tools",
+      "image": "quay.io/gcamposo/java11-tools:latest",
+      "memoryLimit": "4294Mi",
+      "mountSources": true
+    }
+  ],
+  "commands": [
+    {
+      "name": "log in openshift",
+      "actions": [
+        {
+          "type": "exec",
+          "component": "camelk-tools",
+          "command": "oc login -p openshift -u {{ user }} --server=https://api.{{ domain }}:6443 --insecure-skip-tls-verify={{ insecure_skip_tls_verify }} && oc project {{ user }}-project",
+          "workdir": "${CHE_PROJECTS_ROOT}"
+        }
+      ]
+    }
+  ]
+}

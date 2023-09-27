@@ -1,0 +1,50 @@
+- name: Get Che user token
+  uri:
+    url: https://keycloak-{{ workshop_che_namespace }}.{{ route_subdomain }}/auth/realms/codeready/protocol/openid-connect/token
+    validate_certs: false
+    method: POST
+    body:
+      username: "{{ user }}"
+      password: "{{ workshop_che_user_password }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    body_format: form-urlencoded
+    status_code: 200
+  register: user_token
+  retries: 10
+  delay: 10
+
+## to start workspace start-after-create=true
+- name: Create Fuse workspace for {{ user }}
+  when: module_fuse|bool
+  uri:
+    url: https://codeready-{{ workshop_che_namespace }}.{{ route_subdomain }}/api/workspace/devfile?start-after-create=true&namespace={{ user }}
+    validate_certs: false
+    method: POST
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ user_token.json.access_token }}"
+    body: "{{ lookup('template', 'fuse-devfile.json.j2') }}"
+    body_format: json
+    status_code: 201,409
+  register: _result
+  until: _result.status == 201 or _result.status == 409
+  retries: 10
+  delay: 15
+
+- name: Create Camel K workspace for {{ user }}
+  when: module_camel_k|bool
+  uri:
+    url: https://codeready-{{ workshop_che_namespace }}.{{ route_subdomain }}/api/workspace/devfile?namespace={{ user }}
+    validate_certs: false
+    method: POST
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ user_token.json.access_token }}"
+    body: "{{ lookup('template', 'camel-k-devfile.json.j2') }}"
+    body_format: json
+    status_code: 201,409
+  register: _result
+  until: _result.status == 201 or _result.status == 409
+  retries: 10
+  delay: 15

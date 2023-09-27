@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: monitoring
+  name: camel-metrics
+  namespace: poc
+spec:
+  namespaceSelector:
+    matchNames:
+      - poc
+  podMetricsEndpoints:
+    - path: /q/metrics
+      port: http
+  selector:
+    matchLabels:
+      app-with-metrics: quarkus-app

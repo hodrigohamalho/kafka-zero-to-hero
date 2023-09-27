@@ -1,0 +1,38 @@
+apiVersion: org.eclipse.che/v1
+kind: CheCluster
+metadata:
+  name: codeready-workspaces
+spec:
+  server:
+    cheImageTag: ''
+    cheFlavor: codeready
+    devfileRegistryImage: ''
+    pluginRegistryImage: ''
+    tlsSupport: true
+    workspaceNamespaceDefault: <username>-project
+    selfSignedCert: false
+    serverMemoryRequest: '2Gi'
+    serverMemoryLimit: '6Gi'
+    customCheProperties:
+      CHE_LIMITS_WORKSPACE_IDLE_TIMEOUT: "0"
+      CHE_LIMITS_USER_WORKSPACES_RUN_COUNT: "2"
+  database:
+    externalDb: false
+    chePostgresHostName: ''
+    chePostgresPort: ''
+    chePostgresUser: ''
+    chePostgresPassword: ''
+    chePostgresDb: ''
+  auth:
+    openShiftoAuth: false
+    identityProviderImage: ''
+    externalIdentityProvider: false
+    identityProviderURL: ''
+    identityProviderAdminUserName: admin
+    identityProviderPassword: admin
+    identityProviderRealm: ''
+    identityProviderClientId: ''
+  storage:
+    pvcStrategy: per-workspace
+    pvcClaimSize: 1Gi
+    preCreateSubPaths: true
