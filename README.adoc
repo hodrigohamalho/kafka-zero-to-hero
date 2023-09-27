@@ -28,7 +28,7 @@ This workshop introduces participants to AMQ through a presentation and  hands-o
 
 Duration: 90 minutes with demos
 
-. https://docs.google.com/presentation/d/1CI5eRojj2KkcG_KmZtsRr_N75Y8vFEM6g-EVrpqId1M[Presentation Deck] (Red Hat Internal Only)
+https://docs.google.com/presentation/d/1CI5eRojj2KkcG_KmZtsRr_N75Y8vFEM6g-EVrpqId1M[Presentation Deck] (Red Hat Internal Only)
 
 . Event Driven Architecture
 . Kafka
