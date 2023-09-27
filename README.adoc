@@ -1,6 +1,8 @@
-= Red Hat Integration: AMQ Streams Workshop
+= Kafka Zero to Hero Workshop
 
-=== Introduction
+This is a hands-on workshop that aims to give you basic practical experience with the main components of Kafka within the Kubernetes world using AMQ Streams, a Red Hat solution based on the Open Source https://strimz.io[Strimzi] project.
+
+== Introduction
 
 link:https://www.redhat.com/en/topics/integration/what-is-apache-kafka[Apache Kafka] has become the leading platform for building real-time data pipelines.  Today, Kafka is heavily used for developing event-driven applications,  where it lets services communicate with each other through events. Using Kubernetes for this type of workload requires adding specialized  components such as Kubernetes Operators and connectors to bridge the  rest of your systems and applications to the Kafka ecosystem.
 
@@ -8,9 +10,9 @@ To respond to business demands quickly and efficiently, you need a way  to integ
 
 image::https://access.redhat.com/webassets/avalon/d/Red_Hat_AMQ-7.7-Evaluating_AMQ_Streams_on_OpenShift-en-US/images/320e68d6e4b4080e7469bea094ec8fbf/operators.png[Operators within the AMQ Streams architecture]
 
-AMQ streams, a link:https://www.redhat.com/en/products/integration[Red Hat Integration] component, makes Apache Kafka “OpenShift native” through the use of  powerful operators that simplify the deployment, configuration,  management, and use of Apache Kafka on Red Hat OpenShift.
+AMQ streams, a link:https://www.redhat.com/en/products/application-foundations[Red Hat Application Foundation] component, makes Apache Kafka “OpenShift native” through the use of  powerful operators that simplify the deployment, configuration,  management, and use of Apache Kafka on Red Hat OpenShift.
 
-=== Audience
+== Audience
 
 - Developers
 - Architects
@@ -20,7 +22,26 @@ AMQ streams, a link:https://www.redhat.com/en/products/integration[Red Hat Integ
 
 This workshop introduces participants to AMQ through a presentation and  hands-on lab format. This workshop is intended to be completed in a  half-day (4hrs) session.
 
-=== Agenda
+== Agenda
+
+== Concepts - Kafka 101
+
+Duration: 90 minutes with demos
+
+. https://docs.google.com/presentation/d/1CI5eRojj2KkcG_KmZtsRr_N75Y8vFEM6g-EVrpqId1M[Presentation Deck] (Red Hat Internal Only)
+
+. Event Driven Architecture
+. Kafka
+. Kafka Brokers
+. Kafka High Availability
+. Kafka Leaders / Replicas
+. Kafka Mirror Maker
+. Kafka Store
+. Kafka Security
+. Kafka Connect vs Camel
+. Kafka on Kubernetes (Strimzi)
+
+== Labs
 
 . link:./labs/0-to-60.adoc[AMQ Streams on OpenShift from 0 to 60]
 
@@ -41,12 +62,6 @@ This workshop introduces participants to AMQ through a presentation and  hands-o
 . link:./labs/kafka-connect.adoc[Running KafkaConnect applications]
 
 . link:./labs/management-monitoring.adoc[Management and monitoring]
-
-=== Labs
-
-The main idea of the workshop is to present to the student a set of  hands-on labs to test the features of  AMQ Streams. The following labs should cover the main aspects of the product.
-
-- link:labs/0-to-60.adoc[Lab 01] - AMQ Streams from 0 to 60
 
 === Contributing
 
