@@ -24,7 +24,7 @@ This workshop introduces participants to AMQ through a presentation and  hands-o
 
 == Agenda
 
-== Concepts - Kafka 101
+=== Concepts - Kafka 101
 
 Duration: 90 minutes with demos
 
@@ -41,7 +41,7 @@ Duration: 90 minutes with demos
 . Kafka Connect vs Camel
 . Kafka on Kubernetes (Strimzi)
 
-== Labs
+=== Labs
 
 . link:./labs/0-to-60.adoc[AMQ Streams on OpenShift from 0 to 60]
 
