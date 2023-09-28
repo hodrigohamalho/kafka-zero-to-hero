@@ -5,6 +5,7 @@ metadata:
   labels:
     app: tutorial-web-app
 spec:
+  host: labs.{{ route_subdomain }}
   to:
     kind: Service
     name: tutorial-web-app

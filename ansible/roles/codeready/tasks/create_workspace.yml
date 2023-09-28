@@ -1,6 +1,6 @@
 - name: Get Che user token
   uri:
-    url: https://keycloak-{{ workshop_che_namespace }}.{{ route_subdomain }}/auth/realms/codeready/protocol/openid-connect/token
+    url: https://keycloak-{{ che_project }}.{{ route_subdomain }}/auth/realms/codeready/protocol/openid-connect/token
     validate_certs: false
     method: POST
     body:
@@ -18,7 +18,7 @@
 - name: Create Fuse workspace for {{ user }}
   when: module_fuse|bool
   uri:
-    url: https://codeready-{{ workshop_che_namespace }}.{{ route_subdomain }}/api/workspace/devfile?start-after-create=true&namespace={{ user }}
+    url: https://codeready-{{ che_project }}.{{ route_subdomain }}/api/workspace/devfile?start-after-create=true&namespace={{ user }}
     validate_certs: false
     method: POST
     headers:
@@ -35,7 +35,7 @@
 - name: Create Camel K workspace for {{ user }}
   when: module_camel_k|bool
   uri:
-    url: https://codeready-{{ workshop_che_namespace }}.{{ route_subdomain }}/api/workspace/devfile?namespace={{ user }}
+    url: https://codeready-{{ che_project }}.{{ route_subdomain }}/api/workspace/devfile?namespace={{ user }}
     validate_certs: false
     method: POST
     headers:

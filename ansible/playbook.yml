@@ -10,13 +10,21 @@
     ocp_username: "{{ocp4_workload_authentication_admin_user|default('opentlc-mgr',true)}}"
     debug_enable: false
     num_users: 1
+    
+    # USER REGISTRATION 
+    registration_namespace: registration
+    snapshot_operator_project: openshift-marketplace
+    lab_title: "Kafka Zero to Hero Workshop"
+    username_prefix: "user"
+    user_access_token: "openshift"
 
     # CHE configuration
-    workshop_rhsso_admin_user_name: admin
-    workshop_rhsso_admin_password: admin
+    workshop_openshift_user_name: userX
     workshop_openshift_user_password: openshift
+    workshop_che_user_name: userX
     workshop_che_user_password: openshift
-    workshop_che_namespace: devspace
+    che_project: che
+
 
     # provision_webapp
     solution_explorer_client_id: tutorial-web-app
@@ -60,12 +68,12 @@
       include_role:
         name: username-distribution
     
-    - name: Provision OpenShift Dev Spaces
-      include_role:
-        name: devspaces
-      vars:
-        operators_project: "openshift-operators"
-        snapshot_operator_project: "openshift-marketplace"
+    # - name: Provision OpenShift Dev Spaces
+    #   include_role:
+    #     name: devspaces
+    #   vars:
+    #     operators_project: "openshift-operators"
+    #     snapshot_operator_project: "openshift-marketplace"
 
     # - name: output workshop info
     #   msg: "{{ item }}"

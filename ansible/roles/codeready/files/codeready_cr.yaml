@@ -9,7 +9,7 @@ spec:
     devfileRegistryImage: ''
     pluginRegistryImage: ''
     tlsSupport: true
-    workspaceNamespaceDefault: <username>-project
+    workspaceNamespaceDefault: <username>
     selfSignedCert: false
     serverMemoryRequest: '2Gi'
     serverMemoryLimit: '6Gi'

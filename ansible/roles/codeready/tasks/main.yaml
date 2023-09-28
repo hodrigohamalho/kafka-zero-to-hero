@@ -1,45 +1,45 @@
 # Install CRW via operator
-- name: Evaluate {{ workshop_che_namespace }} namespace
+- name: Evaluate {{ che_project }} namespace
   k8s:
     state: present
     kind: Project
     api_version: project.openshift.io/v1
     definition:
       metadata:
-        name: "{{ workshop_che_namespace }}"
+        name: "{{ che_project }}"
         annotations:
           openshift.io/description: ""
           openshift.io/display-name: "CodeReady Project"
 
 # deploy codeready operator
-- name: Evaluate OperatorGroup
-  k8s:
-    state: present
-    namespace: '{{ workshop_che_namespace }}'
-    resource_definition: "{{ lookup('template', 'codeready_operatorgroup.yaml.j2') }}"
+# - name: Evaluate OperatorGroup
+#   k8s:
+#     state: present
+#     namespace: '{{ che_project }}'
+#     resource_definition: "{{ lookup('template', 'codeready_operatorgroup.yaml.j2') }}"
 
-- name: Evaluate Subscription
-  k8s:
-    state: present
-    namespace: '{{ workshop_che_namespace }}'
-    resource_definition: "{{ lookup('file', 'codeready_subscription.yaml') }}"
+# - name: Evaluate Subscription
+#   k8s:
+#     state: present
+#     namespace: '{{ che_project }}'
+#     resource_definition: "{{ lookup('file', 'codeready_subscription.yaml') }}"
 
-# wait for CRD to be a thing
-- name: Wait for CodeReady CRD to be Ready
-  k8s_info:
-    api_version: apiextensions.k8s.io/v1
-    kind: CustomResourceDefinition
-    name: checlusters.org.eclipse.che
-  register: r_codeready_crd
-  retries: 200
-  delay: 10
-  until: r_codeready_crd.resources | list | length == 1
+# # wait for CRD to be a thing
+# - name: Wait for CodeReady CRD to be Ready
+#   k8s_info:
+#     api_version: apiextensions.k8s.io/v1
+#     kind: CustomResourceDefinition
+#     name: checlusters.org.eclipse.che
+#   register: r_codeready_crd
+#   retries: 200
+#   delay: 10
+#   until: r_codeready_crd.resources | list | length == 1
 
 # deploy codeready CR
 - name: Create CR for CodeReady
   k8s:
     state: present
-    namespace: '{{ workshop_che_namespace }}'
+    namespace: '{{ che_project }}'
     merge_type:
     - strategic-merge
     - merge
@@ -48,7 +48,7 @@
 # wait for che to be up
 - name: Wait for CRW to be running
   uri:
-    url: https://codeready-{{ workshop_che_namespace }}.{{ route_subdomain }}/dashboard/
+    url: https://codeready-{{ che_project }}.{{ route_subdomain }}/dashboard/
     validate_certs: false
   register: result
   until: result.status == 200
@@ -58,7 +58,7 @@
 - name: Get CodeReady keycloak deployment
   k8s_info:
     kind: Deployment
-    namespace: '{{ workshop_che_namespace }}'
+    namespace: '{{ che_project }}'
     name: keycloak
   register: r_keycloak_deployment
 
@@ -93,7 +93,7 @@
 
 - name: Get Codeready SSO admin token
   uri:
-    url: https://keycloak-{{ workshop_che_namespace }}.{{ route_subdomain }}/auth/realms/master/protocol/openid-connect/token
+    url: https://keycloak-{{ che_project }}.{{ route_subdomain }}/auth/realms/master/protocol/openid-connect/token
     validate_certs: false
     method: POST
     body:
@@ -107,7 +107,7 @@
 
 - name: Increase CodeReady access token lifespans
   uri:
-    url: https://keycloak-{{ workshop_che_namespace }}.{{ route_subdomain }}/auth/admin/realms/codeready
+    url: https://keycloak-{{ che_project }}.{{ route_subdomain }}/auth/admin/realms/codeready
     validate_certs: false
     method: PUT
     headers:

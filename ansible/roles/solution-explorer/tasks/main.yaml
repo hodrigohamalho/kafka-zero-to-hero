@@ -27,7 +27,7 @@
   k8s:
     state: present
     namespace: '{{ solution_explorer_namespace }}'
-    resource_definition: '{{ lookup("file", "route.yml") }}'
+    resource_definition: '{{ lookup("template", "route.yml.j2") }}'
 
 - name: Get webapp secure route
   k8s_info:
