@@ -7,7 +7,7 @@
     grafana_password: admin
     insecure_skip_tls_verify: true
     delete_workshop: false
-    ocp_username: opentlc-mgr
+    ocp_username: "{{ocp4_workload_authentication_admin_user|default('opentlc-mgr',true)}}"
     debug_enable: false
     num_users: 1
 
@@ -60,10 +60,29 @@
       include_role:
         name: username-distribution
     
-    # - name: Provision OpenShift Dev Spaces
-    #   include_role:
-    #     name: devspaces
-    #   vars:
-    #     operators_project: "openshift-operators"
-    #     snapshot_operator_project: "openshift-marketplace"
+    - name: Provision OpenShift Dev Spaces
+      include_role:
+        name: devspaces
+      vars:
+        operators_project: "openshift-operators"
+        snapshot_operator_project: "openshift-marketplace"
 
+    # - name: output workshop info
+    #   msg: "{{ item }}"
+    #   loop:
+    #     - ""
+    #     - "Kafka Zero to Hero - {{ lab_title }} provisioned for {{ num_users }} user(s)"
+    #     - ""
+    #     - "User Registration: https://users-registration.{{ route_subdomain }}"
+    #     - "Access Token for registration is '{{ user_access_token }}'"
+    #     - "Admin credentials for registration app are 'admin/{{ workshop_registration_admin_password }}'"
+    #     - "You should share this URL (or a shortlink for it) -- It is all they will need to get started!"
+    #     - ""
+    #     - "Solution Explorer: "
+    #     - "https://tutorial-web-app-webapp.{{ route_subdomain }}"
+    #     - ""
+    #     - "OpenShift Console: {{ console_url }}"
+    #     - "Cluster admin login with '{{ ocp_username }}' / 'r3dh4t1!'"
+    #   when: not silent|bool
+
+    

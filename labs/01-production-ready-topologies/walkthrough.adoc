@@ -5,9 +5,11 @@
 
 = Lab 01 - Production-ready topologies: sizing and persistence
 
+Explore how to use AMQ Streams for configuring a Kafka cluster for production usage, in particular sizing and persistence settings.
+
 In the previous module, we have set up a simple Apache Kafka cluster.
+
 It is suitable for development and experimentation, but not for a production setting.
-In this module you will learn how to use AMQ Streams for configuring a Kafka cluster for production usage, in particular sizing and persistence settings.
 
 [type=walkthroughResource,serviceName=openshift]
 .OpenShift Console

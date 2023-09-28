@@ -50,3 +50,8 @@
   k8s:
     state: present
     resource_definition: "{{ lookup('template', 'oauth-client.yml.j2') }}"
+
+- name: Create OpenShift Group
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'instructions-group.yaml.j2') }}"
