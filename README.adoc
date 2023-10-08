@@ -6,7 +6,7 @@ This is a hands-on workshop that aims to give you basic practical experience wit
 
 link:https://www.redhat.com/en/topics/integration/what-is-apache-kafka[Apache Kafka] has become the leading platform for building real-time data pipelines.  Today, Kafka is heavily used for developing event-driven applications,  where it lets services communicate with each other through events. Using Kubernetes for this type of workload requires adding specialized  components such as Kubernetes Operators and connectors to bridge the  rest of your systems and applications to the Kafka ecosystem.
 
-image::kafka-zero-to-hero-workshop.png[Kafka Zero to Hero Workshop]
+image::./images/kafka-zero-to-hero-workshop.png[Kafka Zero to Hero Workshop]
 
 AMQ streams, a link:https://www.redhat.com/en/products/application-foundations[Red Hat Application Foundation] component, makes Apache Kafka “OpenShift native” through the use of  powerful operators that simplify the deployment, configuration,  management, and use of Apache Kafka on Red Hat OpenShift.
 
