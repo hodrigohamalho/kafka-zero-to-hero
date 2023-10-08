@@ -1,12 +1,14 @@
 = Kafka Zero to Hero Workshop
 
-This is a hands-on workshop that aims to give you basic practical experience with the main components of Kafka within the Kubernetes world using AMQ Streams, a Red Hat solution based on the Open Source https://strimz.io[Strimzi] project.
+Welcome to the Kafka Zero to Hero workshop using AMQ Streams. AMQ Streams is the supported version of the open-source project https://strimzi.io by Red Hat.
+
+image::./images/kafka-zero-to-hero-workshop.png[Kafka Zero to Hero Workshop]
+
+This is a hands-on workshop that aims to give you basic practical experience with the main components of Kafka within the Kubernetes.
 
 == Introduction
 
 link:https://www.redhat.com/en/topics/integration/what-is-apache-kafka[Apache Kafka] has become the leading platform for building real-time data pipelines.  Today, Kafka is heavily used for developing event-driven applications,  where it lets services communicate with each other through events. Using Kubernetes for this type of workload requires adding specialized  components such as Kubernetes Operators and connectors to bridge the  rest of your systems and applications to the Kafka ecosystem.
-
-image::./images/kafka-zero-to-hero-workshop.png[Kafka Zero to Hero Workshop]
 
 AMQ streams, a link:https://www.redhat.com/en/products/application-foundations[Red Hat Application Foundation] component, makes Apache Kafka “OpenShift native” through the use of  powerful operators that simplify the deployment, configuration,  management, and use of Apache Kafka on Red Hat OpenShift.
 
@@ -98,8 +100,5 @@ The URL will be displayed by the `Installation Finished` task.
 
 image::./images/user-distribution-console.PNG[User Distribution]
 
-=== Contributing
-
-We welcome all forms of contribution (content, issues/bugs, feedback).
 
 
