@@ -1,22 +1,24 @@
-:walkthrough: Welcome and Installing Kafka
+:walkthrough: Kafka 101 - Introduction
 :codeready-url: {che-url}
 :openshift-url: {openshift-host}
 :user-password: openshift
 
-= Lab 0 - Welcome and Installing Kafka
+= Lab 0 - Kafka 101 - Introduction
 
 Welcome to the Kafka Zero to Hero Workshop! It's a pleasure to guide you on this hands-on experience.
+
+image::./images/kafka-zero-to-hero-workshop.png[Kafka Zero to Hero Workshop]
 
 This workshop aims to offer you practical experience with Red Hat AMQ Streams, that is the productized and supported version of https://strimzi.io[Strimzi.io]. It is not meant to be a complete training of AMQ Streams. For this purpose we have amazing courses here https://www.redhat.com/en/services/training-and-certification[training and certification], covering many aspects of Red Hat AMQ Streams in depth.
 
 The main objective is to cover as many Kafka aspects during this workshop.
 
-[type=walkthroughResource,serviceName=codeready]
-.CodeReady Workspaces
-****
-* link:{codeready-url}[Console, window="_blank"]
-* link:https://developers.redhat.com/products/codeready-workspaces/overview/[Want to know more about CodeReady Workspaces?, window="_blank"]
-****
+*Credentials*
+
+Use the following credentials to login into the web consoles:
+
+* Your *username* is: `{user-username}` +
+* Your *password* is: `{user-password}`
 
 [type=walkthroughResource,serviceName=openshift]
 .OpenShift Console
@@ -24,96 +26,52 @@ The main objective is to cover as many Kafka aspects during this workshop.
 * link:{openshift-url}[Console, window="_blank"]
 ****
 
+
 [time=2]
 == Install the AMQ Streams Operator
 
-Our first step is to install the AMQ Streams Operator. As there are many students using this environment the role to install operator needed to be removed from your user. 
+Access the link:{openshift-url}[Openshift Console, window="_blank"]and login using the credentials provided username: {user-username} and password: {user-password}.
 
-So, if you follow the steps:
+Our first step is to install the `AMQ Streams Operator`. As there are many students using this environment the role to install operator needed to be removed from your user. 
 
-* Access the Administrator console
-* Click on Operators -> OperatorHub
-* Search for AMQ Streams
+The Operator is already installed for you, so you can just skip to the next topic.
 
-image::images/operator-install.png[] 
-
-And proceed with the wizard to finish the installation. 
-
-Instead, if you try to access it, you should see a permission message problem on the screen.
-
-image::images/operator-unable-to-install.png[] 
-
-Even if it's already installed is important to pass to this step, because it's the `AMQ Streams Operator` that does all the magic behind the other operations that we will be performing in the labs. 
+Even if it's already installed is important to pass to this step, because it's the `AMQ Streams Operator` that does all the magic behind the tasks that we will be performing in the following labs. 
 
 [time=10]
 == Install Kafka Cluster
 
 * Go to the Developer Perspective
 
-image::4-10-2020-09-46-46-AM.png[] 
+image::images/developer.jpg[Developer Perspective] 
 
 * Click on `Add` -> `Operator Backed`
 
-image::4-10-2020-09-49-14-AM.png[] 
+image::images/add.png[Operator Backed]
 
 * Choose `Kafka`
 
-image::4-10-2020-09-50-14-AM.png[] 
+image::images/add-kafka.png[Kafka]
 
 * And click on `Create` button
 
-image::4-10-2020-09-51-08-AM.png[] 
+image::images/kafka-create.png[Kafka] 
 
 * Explore a little the properties in the form and see what you are already familiarized and wich not, it's a good momento to raise some doubts with the instructor. 
 If you do not have any, switch to the `YAML view` and take a look on all configuration, after just it the `Create` button.
 
-image::2-10-2020-10-00-35-AM.png[] 
+image::images/kafka-create-2.png[Kafka]
 
-* Here you have the full yaml. If you want, you can copy and paste
+Yaml View
 
-[source,yaml]
-----
-apiVersion: kafka.strimzi.io/v1beta2
-kind: Kafka
-metadata:
-  name: my-cluster
-spec:
-  entityOperator:
-    topicOperator: {}
-    userOperator: {}
-  kafka:
-    listeners:
-      - name: plain
-        port: 9092
-        type: internal
-        tls: false
-      - name: tls
-        port: 9093
-        type: internal
-        tls: true
-    storage:
-      type: ephemeral
-    version: 3.4.0
-    replicas: 3
-    config:
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
-      default.replication.factor: 3
-      min.insync.replicas: 2
-      inter.broker.protocol.version: '3.3'
-  zookeeper:
-    storage:
-      type: ephemeral
-    replicas: 3
+image::images/kafka-create-3.png[Kafka]
 
-----
+Go to the `Pods` and look all the pods running that you have, you must have 3 zookeeper, 3 kafka nodes and and `my-cluster-entity` operator running with `Ready` status.
 
-After you cluster is installed, in the `Pods` view you will see:
+The pods are not showing in the `Topology` view, because it's Strimzi Pod Sets, if you need to know more about that, https://strimzi.io/blog/2022/05/23/strimzipodsets-what-it-is-and-why-should-you-care/[take a look on this video] from `Jakub Scholz`.
 
 image::images/pod-list.png[] 
 
-You can also see the Kafka cluster using the oc command:
 
 [source,bash]
 ----
@@ -147,6 +105,7 @@ image::2-10-2020-10-06-58-AM.png[]
   ** `KafkaRebalance`
   ** `Service`
   ** `Route`
+  ** `Pod`
 
 * Your menu should look like that
 
@@ -363,7 +322,7 @@ Now open the swagger url:
 
 image::3-10-2020-10-48-41-AM.png[] 
 
-Add the following by the end of the url: `/webjars/swagger-ui/2.1.0/index.html?url=/camel/api-docs`
+Open a new tab with the same a application URL and concatenate the following in the end of the url: `/webjars/swagger-ui/2.1.0/index.html?url=/camel/api-docs`
 
 image::3-10-2020-10-50-02-AM.png[] 
 
@@ -432,168 +391,9 @@ Your terminal should be like this:
 
 image::4-10-2020-19-00-43-PM.png[] 
 
-==== Change the cluster config
-
-[update-cluster]
-Now let's change the Kafka configuration.
-
-Click on `Kafkas` on the left menu and then edit our cluster CR:
-
-image::4-10-2020-19-04-45-PM.png[] 
-
-In the config section, add `log.retention.hours: 200` as shown below:
-
-image::4-10-2020-19-09-24-PM.png[] 
-
-[source,yaml]
-----
-apiVersion: kafka.strimzi.io/v1beta1
-kind: Kafka
-metadata:
-  name: my-cluster
-spec:
-  kafka:
-    version: 2.5.0
-    replicas: 3
-    listeners:
-      plain: {}
-      tls: {}
-    config:
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
-      log.message.format.version: "2.5"
-      log.retention.hours: 200 <1>
-    storage:
-      type: ephemeral
-  zookeeper:
-    replicas: 3
-    storage:
-      type: ephemeral
-  entityOperator:
-    topicOperator: {}
-    userOperator: {}
-----
-<1> Added
-
-And then click on `Save` button.
-
-=== Topic View Application
-
-Now let's deploy a Topic View app. Run in your terminal:
-
-[source,bash]
-----
-oc process -f topic-view-template.yml \
-  -p NAMESPACE=$KAFKA_NAMESPACE \
-  -p KAFKA_BROKER=my-cluster-kafka-bootstrap:9092 \
-  -p SUBDOMAIN=$SUBDOMAIN \
-  | oc apply -f -
-----
-
-Now open it by clicking on the arrow icon:
-
-image::5-10-2020-09-11-48-AM.png[] 
-
-You will see this:
-
-image::5-10-2020-09-12-24-AM.png[] 
-
-==== Scale Kafka Cluster
-
-Before we scale our cluster, let's create two more topics.
-
-* Make sure you are in the right project and click on `Add` -> `Operator Backed`
-
-image::4-10-2020-09-49-14-AM.png[] 
-
-* Now choose `Kafka Topic` and then `Create`
-
-image::4-10-2020-16-06-32-PM.png[] 
-
-image::4-10-2020-16-06-58-PM.png[] 
-
-* Fill out the form using the values:
-** Name: `topic-hundred-partitions`
-** Partitions: `100`
-** Replication Factor: `3`
-* And now click on `Create`
-
-or just create using the yml
-
-  oc apply -f hundred-topic.yml 
-
-Repeat the same step above and create another topic with the following config:
-
-* Name: `topic-two-hundred-partitions`
-* Partitions: `200`
-* Replication Factor: `3`
-
-  oc apply -f hundred-topic.yml 
-
-Let's make sure the topic were created:
-
-[source,bash]
-----
-oc -n $KAFKA_NAMESPACE exec -it $KAFKA_BROKER_POD -c kafka -- bin/kafka-topics.sh \
-    --list \
-    --bootstrap-server $BROKER_HOST
-----
-
-image::5-10-2020-09-39-36-AM.png[] 
-
-Now we can scale up our cluster. For that, change the kafka replica to `5`. For that follow <<update-cluster,the steps of changing the cluster>>.
-
-[source,yaml]
-----
-apiVersion: kafka.strimzi.io/v1beta1
-kind: Kafka
-metadata:
-  name: my-cluster
-spec:
-  kafka:
-    version: 2.5.0
-    replicas: 5 <1>
-    listeners:
-      plain: {}
-      tls: {}
-    config:
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
-      log.message.format.version: "2.5"
-    storage:
-      type: ephemeral
-  zookeeper:
-    replicas: 3
-    storage:
-      type: ephemeral
-  entityOperator:
-    topicOperator: {}
-    userOperator: {}
-----
-<1> Increased
-
-We can check the number os broker by looking at the pods count.
-
-image::5-10-2020-10-26-18-AM.png[] 
-
-Now go back to the Topic View App
-
-image::5-10-2020-10-27-03-AM.png[] 
-
-
-
-[time=5]
-[type=verification]
-Are you seeing a loop hello message in the logs?
-
-
 [time=1]
 == Summary
 
-Congratulations, you finished the setup of your environment!
+Congratulations, you finished the Kafka 101 Lab.
 
-In this lab, you learned how to set up a Camel on Quarkus project using CodeReady Workspaces.
 
-You can now proceed to `Hello Router Lab`.

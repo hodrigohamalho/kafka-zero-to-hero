@@ -45,7 +45,7 @@ Support material for this phase: Red Hat Developers x`x`- Kafka 101.
 
 === Labs
 
-. link:./labs/00-kafka-install/walkthrough.adoc[Installing AMQ Streams (Kafka - Strimzi) on Openshift]
+. link:./labs/00-kafka-101/walkthrough.adoc[Installing AMQ Streams (Kafka - Strimzi) on Openshift]
 
 . link:./labs/01-production-ready-topologies/walkthrough.adoc[Production-ready topologies: sizing and persistence]
 
