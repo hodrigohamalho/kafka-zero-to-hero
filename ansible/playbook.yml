@@ -1,8 +1,8 @@
 - hosts: localhost
-  name: Debezium database migration
+  name: Kafka Zero to Hero Workshop
   vars:
     server: https://api.cluster-6x8wc.6x8wc.sandbox773.opentlc.com:6443
-    kafka_cluster: my-source-cluster
+    kafka_cluster: my-cluster
     grafana_user: admin
     grafana_password: admin
     insecure_skip_tls_verify: true
