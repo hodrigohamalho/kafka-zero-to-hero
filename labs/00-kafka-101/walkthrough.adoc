@@ -6,7 +6,7 @@
 = Lab 0 - Kafka 101 - Introduction
 
 Welcome to the Kafka Zero to Hero Workshop! It's a pleasure to guide you on this hands-on experience.
-
++
 image::./images/kafka-zero-to-hero-workshop.png[Kafka Zero to Hero Workshop]
 
 This workshop aims to offer you practical experience with Red Hat AMQ Streams, that is the productized and supported version of https://strimzi.io[Strimzi.io]. It is not meant to be a complete training of AMQ Streams. For this purpose we have amazing courses here https://www.redhat.com/en/services/training-and-certification[training and certification], covering many aspects of Red Hat AMQ Streams in depth.
@@ -44,17 +44,16 @@ Even if it's already installed is important to pass to this step, because it's t
 
 In order to be available those useful Kafka related resources in your Openshift menu we need to add them.
 +
-
 image::images/kafka-side-menu-full.jpg[] 
 
 * If you are in the *Administrator Perspective*, switch to the *Developer Perspective*.
-
++
 image::images/developer.jpg[] 
 
 * Add Kafka and KafkaTopic to the Dev console
   * Click on `Search` and search for the Kafka and KafkaTopic CR
   * Click on `add to navigation`
-
++
 image::images/kafka-side-menu.jpg[] 
 
 After adding it, take a look that it's available on the menu in the side bar.
@@ -72,7 +71,7 @@ image::images/kafka-side-menu-2.jpg[]
   ** `Route`
   ** `Pod`
 
-* Your menu should look this
+* Your menu should look like this
 +
 image::images/kafka-side-menu-full.jpg[] 
 
