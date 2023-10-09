@@ -30,7 +30,7 @@ Use the following credentials to login into the web consoles:
 [time=2]
 == Install the AMQ Streams Operator
 
-Access the link:{openshift-url}[Openshift Console, window="_blank"]and login using the credentials provided username: {user-username} and password: {user-password}.
+Access the link:{openshift-url}[Openshift Console, window="_blank"] and login using the credentials provided username: {user-username} and password: {user-password}.
 
 Our first step is to install the `AMQ Streams Operator`. As there are many students using this environment the role to install operator needed to be removed from your user. 
 
@@ -42,18 +42,23 @@ Even if it's already installed is important to pass to this step, because it's t
 
 == Customizing the Openshift Developer Console
 
-image::2-10-2020-10-02-47-AM.png[] 
+In order to be available those useful Kafka related resources in your Openshift menu we need to add them.
 
-* If you are in the Administration Perspective, switch to Developer Perspective
-* Add Kafka, KafkaTopic to the Dev console
+image::images/kafka-side-menu-full.jpg[] 
+
+* If you are in the Administration Perspective, switch to Developer Perspective.
+
+image::images/developer.jpg[] 
+
+* Add Kafka and KafkaTopic to the Dev console
   * Click on `Search` and search for the Kafka and KafkaTopic CR
   * Click on `add to navigation`
 
-image::2-10-2020-10-05-11-AM.png[] 
+image::images/kafka-side-menu.jpg[] 
 
-image::2-10-2020-10-06-21-AM.png[] 
+After adding it, take a look that it's available on the menu in the side bar.
 
-image::2-10-2020-10-06-58-AM.png[] 
+image::images/kafka-side-menu-2.jpg[] 
 
 * Repeat the same process to the add the following resources to the side menu:
   ** `KafkaBridge`
@@ -61,21 +66,14 @@ image::2-10-2020-10-06-58-AM.png[]
   ** `KafkaConnector`
   ** `KafkaMirrorMaker2`
   ** `KafkaRebalance`
+  ** `KafkaUser`
   ** `Service`
   ** `Route`
   ** `Pod`
 
 * Your menu should look like that
 
-image::4-10-2020-10-25-34-AM.png[] 
-
-* You can remove any item on the menu by clicking on the `(-)` . It will appear when you hover the mouse over the item.
-
-image::4-10-2020-10-21-31-AM.png[] 
-
-* And then `Remove` from navigation
-
-image::4-10-2020-10-22-17-AM.png[] 
+image::images/kafka-side-menu-full.png[] 
 
 [time=10]
 == Install Kafka Cluster
@@ -111,19 +109,15 @@ image::images/pod-list.png[]
 
 The pods are not showing in the `Topology` view, because it's Strimzi Pod Sets, if you need to know more about that, https://strimzi.io/blog/2022/05/23/strimzipodsets-what-it-is-and-why-should-you-care/[take a look on this video] from `Jakub Scholz`.
 
-The Kafka Cluster is already installed and ready to use. But before going to futher let's see how we can interact with it via command line.
+The Kafka Cluster is already installed and ready to use. 
 
-==== Explore the Dev Console
+On the pod list, select the `zookeeper` pod and go to the `Metrics` tab and observe the consume of cpu, memory and networking, also take a look on the other metrics available.
 
-* After Kafka cluster is fully installed, you can see the Details, Resources and Monitoring
+image::images/pod-monitoring-zk.jpg[] 
 
-image::2-10-2020-10-34-11-AM.png[] 
+And repeat the same process to the Kafka broker.
 
-image::2-10-2020-10-32-36-AM.png[] 
-
-image::2-10-2020-10-35-06-AM.png[] 
-
-image::2-10-2020-10-36-20-AM.png[] 
+image::images/pod-monitoring-broker.png[] 
 
 ==== Create Topics
 
