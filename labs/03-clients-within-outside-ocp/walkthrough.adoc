@@ -1,5 +1,4 @@
 :walkthrough: Clients: within OCP and outside OCP
-:codeready-url: {che-url}
 :openshift-url: {openshift-host}
 :user-password: openshift
 

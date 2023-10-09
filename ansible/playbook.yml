@@ -19,7 +19,7 @@
     user_access_token: "openshift"
 
     # CHE configuration
-    che_project: che
+    devspace_project: devspace
 
     # provision_webapp
     solution_explorer_client_id: tutorial-web-app
@@ -27,8 +27,6 @@
     solution_explorer_image: 'quay.io/gcamposo/tutorial-web-app:{{ solution_explorer_image_tag }}'
     solution_explorer_namespace: "workshop-solution-explorer"
     solution_explorer_walkthrough_locations: https://github.com/hodrigohamalho/kafka-zero-to-hero?walkthroughsFolder=/labs#master
-    
-    branch: main
 
   tasks:
     - name: Define domain

@@ -1,5 +1,4 @@
 :walkthrough: Security
-:codeready-url: {che-url}
 :openshift-url: {openshift-host}
 :user-password: openshift
 

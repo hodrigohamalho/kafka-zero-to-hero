@@ -1,5 +1,4 @@
 :walkthrough: Data Replication with Mirror Maker 2
-:codeready-url: {che-url}
 :openshift-url: {openshift-host}
 :user-password: openshift
 

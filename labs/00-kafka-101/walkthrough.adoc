@@ -1,9 +1,7 @@
 :walkthrough: Kafka 101 - Introduction
-:codeready-url: {che-url}
 :openshift-url: {openshift-host}
 :user-password: openshift
-:codeready-url: http://codeready-che.{openshift-app-host}/
-:che-url: http://codeready-che.{openshift-app-host}/
+:devspaces-url: http://devspaces.{openshift-app-host}/
 
 = Lab 0 - Kafka 101 - Introduction
 
@@ -24,17 +22,16 @@ Use the following credentials to login into the web consoles:
 * Your *username* is: `{user-username}` +
 * Your *password* is: `{user-password}`
 
-[type=walkthroughResource,serviceName=codeready]
-.Red Hat CodeReady Workspaces
+[type=walkthroughResource,serviceName=devspace]
+.Dev Spaces (IDE)
 ****
-* link:{che-url}[Console, window="_blank", , id="resources-codeready-url"]
+* link:{devspaces-url}[Console, window="_blank", , id="resources-devspace-url"]
 ****
 [type=walkthroughResource]
-.Red Hat OpenShift Developer Console
+.OpenShift Console
 ****
 * link:{openshift-url}/topology/ns/{namespace}[Topology View, window="_blank"]
 ****
-
 
 [time=2]
 == Install the AMQ Streams Operator
@@ -137,156 +134,117 @@ image::images/pod-monitoring-zk.jpg[]
 
 . Repeat the same process to the Kafka broker.
 +
-image::images/pod-monitoring-broker.jpg[] 
+image::images/pod-monitoring-broker.jpg[]
 
-=== Create a Kafka Topic
+[time=5]
+== Create a Kafka Topic
 
-* Make sure you are in the right project and click on `Add` -> `Operator Backed`
+. Make sure you are in the right project and click on `Add` -> `Operator Backed`
++
+image::images/add.jpg[Operator Backed]
 
-image::4-10-2020-09-49-14-AM.png[] 
+. Now find for `Topic` and select the `Kafka Topic` option
++
+image::images/kafka-topic-1.jpg[] 
 
-* Now choose `Kafka Topic` and then `Create`
+. Click on the `Create` button
++
+image::images/kafka-topic-2.jpg[]  
 
-image::4-10-2020-16-06-32-PM.png[] 
+. Fill out the forms using the values:
+.. Name: `first-topic`
+.. Partitions: `3`
+.. Replication Factor: 3
+And now click on `Create`
 
-image::4-10-2020-16-06-58-PM.png[] 
+{empty} +
 
-* Fill out the forms using the values:
-** Name: `first-topic`
-** Partitions: `3`
-** Replication Factor: 3
-* And now click on `Create`
+image::images/kafka-topic-3.jpg[] 
 
-image::4-10-2020-16-45-55-PM.png[] 
+. Look at the `YAML View`.
++
+image::images/kafka-topic-4.png[] 
 
-* You can use the YAML editor as well:
+. To check the complete list of the topics, access the `Kafka Topics` in the left side menu. 
++
+image::images/kafka-topic-5.jpg[] 
 
-image::2-10-2020-10-44-10-AM.png[]  
+{empty} +
 
-[source,yaml]
-----
-apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: first-topic
-  labels:
-    strimzi.io/cluster: my-cluster
-  namespace: strimzi-operator
-spec:
-  config:
-    retention.ms: 604800000
-    segment.bytes: 1073741824
-  partitions: 3
-  replicas: 3
-  topicName: first-topic
-----
+In the Kafka vanilla to access the list of topics you need to use a `Kafka CLI` tool to do it. Let's access the command line and see how it is performed.
 
-Now let's set some vars
+. Access your IDE environment in link:{devspaces-url}[Red Hat Openshift Devspaces, window="_blank"]
 
-[variables]
-[source,bash]
-----
-export KAFKA_NAMESPACE=kafka-demo
-export KAFKA_CLUSTER=my-cluster
-export ZOOKEEPER_HOST=localhost:2181
-export BROKER_HOST=localhost:9092
-export ZOOKEEPER_POD=$(oc -n $KAFKA_NAMESPACE get pods -l app.kubernetes.io/name=zookeeper -o=jsonpath='{.items[0].metadata.name}')
-export KAFKA_BROKER_POD=$(oc -n $KAFKA_NAMESPACE get pods -l app.kubernetes.io/name=kafka -o=jsonpath='{.items[0].metadata.name}')
-export SUBDOMAIN=$(oc get ingresses.config.openshift.io -o jsonpath='{.items[0].spec.domain}')
-echo
-echo $ZOOKEEPER_POD
-echo $KAFKA_BROKER_POD
-echo $SUBDOMAIN
-----
+. Click in `Open`
++
+image::images/devspaces-1.jpg[]
+
+{empty} +
+
+image::images/devspaces-2.png[]
+
+== Topics from the Command Line
+
+. Access the broker 0 pod Terminal.
+.. From the list of Pods in the left side menu, acces the broker 0 pod, and in the tabs select `Terminal`.
++
+image::images/broker-pod.jpg[]
+
+. List the topics using the `kafka-topics` command line tool
 
 [source,bash]
 ----
-oc -n $KAFKA_NAMESPACE exec -it $KAFKA_BROKER_POD -c kafka -- bin/kafka-topics.sh \
+bin/kafka-topics.sh \
     --list \
-    --bootstrap-server $KAFKA_CLUSTER-kafka-bootstrap.$KAFKA_NAMESPACE.svc:9092
+    --bootstrap-server my-cluster-kafka-bootstrap:9092
 ----
++
+image::images/cli-list-topics.jpg[]
 
-image::2-10-2020-11-35-33-AM.png[] 
+. Describe the topic `first-topic`
 
 [source,bash]
 ----
-oc -n $KAFKA_NAMESPACE exec -it $KAFKA_BROKER_POD -c kafka -- bin/kafka-topics.sh \
-    --bootstrap-server $KAFKA_CLUSTER-kafka-bootstrap.$KAFKA_NAMESPACE.svc:9092 \
+bin/kafka-topics.sh \
+    --bootstrap-server my-cluster-kafka-bootstrap:9092 \
     --topic first-topic \
     --describe
 ----
++
+image::images/cli-describe-topic.jpg[]
 
-image::2-10-2020-11-36-48-AM.png[] 
-
-===== Create Topic Using Kafka CLI
-
-Create topic using kafka-topics.sh
+. Now let's create a new topic still using the command line, named `second-topic`
 
 [source,bash]
 ----
-oc -n $KAFKA_NAMESPACE exec -it $KAFKA_BROKER_POD -c kafka -- bin/kafka-topics.sh \
+bin/kafka-topics.sh \
     --create \
-    --bootstrap-server $KAFKA_CLUSTER-kafka-bootstrap.$KAFKA_NAMESPACE.svc:9092 \
+    --bootstrap-server my-cluster-kafka-bootstrap:9092 \
     --replication-factor 1 \
     --partitions 2 \
     --topic second-topic
 ----
++
+image::images/cli-create-topic.jpg[]
 
-List topics
+. List the topics again to see the newly topic created.
 
-[source,bash]
 ----
-oc -n $KAFKA_NAMESPACE exec -it $KAFKA_BROKER_POD -c kafka -- bin/kafka-topics.sh \
+bin/kafka-topics.sh \
     --list \
-    --bootstrap-server $KAFKA_CLUSTER-kafka-bootstrap.$KAFKA_NAMESPACE.svc:9092
+    --bootstrap-server my-cluster-kafka-bootstrap:9092
 ----
++
+image::images/cli-list-topics-2.png[]
 
-image::2-10-2020-17-30-37-PM.png[] 
+. Take a look if the topics created by the command line is appearing in the `Kafka Topics` list in Openshift
++
+image::images/ui-list-topics.png[]
 
-We can see the Kafka Topic CR was created as well:
+Easier from the UI, isn't it? :-)
 
-image::2-10-2020-17-32-30-PM.png[] 
-
-We can also check that by running:
-
-[source,bash]
-----
-oc get kafkatopic -n $KAFKA_NAMESPACE
-----
-
-image::4-10-2020-17-02-32-PM.png[] 
-
-=== Producer and Consumer
-
-Now let's producer some messages.
-
-Open the command below in a terminal tab
-
-.producer
-[source,bash]
-----
-oc -n $KAFKA_NAMESPACE exec -it $KAFKA_BROKER_POD -c kafka -- bin/kafka-console-producer.sh \
-    --broker-list $BROKER_HOST \
-    --topic first-topic
-----
-
-Open the command below in another terminal tab:
-
-.consumer
-[source,bash]
-----
-oc -n $KAFKA_NAMESPACE exec -it $KAFKA_BROKER_POD -c kafka -- bin/kafka-console-consumer.sh \
-    --bootstrap-server $BROKER_HOST \
-    --topic first-topic
-----
-
-TIP: Do not forget to <<variables,set the requirement variables>>
-
-Anything you write in the producer tab, will be shown in the consumer tab.
-
-image::2-10-2020-17-58-00-PM.png[] 
-
-=== VR Application
+[time=5]
+== Deploy an application to Produce/Consume from Kafka
 
 Take note of the bootstrap service from your kafka cluster. We will need it in the next labs.
 
