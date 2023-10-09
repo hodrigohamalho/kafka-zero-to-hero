@@ -6,7 +6,9 @@
 = Lab 0 - Kafka 101 - Introduction
 
 Welcome to the Kafka Zero to Hero Workshop! It's a pleasure to guide you on this hands-on experience.
-+
+
+{empty} +
+
 image::./images/kafka-zero-to-hero-workshop.png[Kafka Zero to Hero Workshop]
 
 This workshop aims to offer you practical experience with Red Hat AMQ Streams, that is the productized and supported version of https://strimzi.io[Strimzi.io]. It is not meant to be a complete training of AMQ Streams. For this purpose we have amazing courses here https://www.redhat.com/en/services/training-and-certification[training and certification], covering many aspects of Red Hat AMQ Streams in depth.
@@ -40,6 +42,7 @@ image::images/operators-installed.jpg[Installed Operators]
 
 Even if it's already installed is important to pass to this step, because it's the `AMQ Streams Operator` that does all the magic behind the tasks that we will be performing in the following labs. 
 
+[time=5]
 == Customizing the Openshift Developer Console
 
 . In order to be available those useful Kafka related resources in your Openshift menu we need to add them.
