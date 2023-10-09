@@ -2,6 +2,8 @@
 :codeready-url: {che-url}
 :openshift-url: {openshift-host}
 :user-password: openshift
+:codeready-url: http://codeready-che.{openshift-app-host}/
+:che-url: http://codeready-che.{openshift-app-host}/
 
 = Lab 0 - Kafka 101 - Introduction
 
@@ -22,10 +24,15 @@ Use the following credentials to login into the web consoles:
 * Your *username* is: `{user-username}` +
 * Your *password* is: `{user-password}`
 
-[type=walkthroughResource,serviceName=openshift]
-.OpenShift Console
+[type=walkthroughResource,serviceName=codeready]
+.Red Hat CodeReady Workspaces
 ****
-* link:{openshift-url}[Console, window="_blank"]
+* link:{che-url}[Console, window="_blank", , id="resources-codeready-url"]
+****
+[type=walkthroughResource]
+.Red Hat OpenShift Developer Console
+****
+* link:{openshift-url}/topology/ns/{namespace}[Topology View, window="_blank"]
 ****
 
 
