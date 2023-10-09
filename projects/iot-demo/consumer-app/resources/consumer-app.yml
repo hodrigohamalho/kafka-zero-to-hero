@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-app
+  labels:
+    app: iot-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer-app
+  template:
+    metadata:
+      labels:
+        app: consumer-app
+    spec:
+      containers:
+        - name: consumer-app
+          image: strimzilab/consumer-app:latest
+          env:
+            - name: BOOTSTRAP_SERVERS
+              value: "my-cluster-kafka-bootstrap:9092"
+            - name: CONSUMER_GROUPID
+              value: "consumer-app"
+            - name: CONSUMER_TOPIC
+              value: "iot-temperature-max"
+            - name: CONSUMER_AUTO_OFFSET_RESET
+              value: "earliest"
+---            
+apiVersion: v1
+kind: Service
+metadata:
+  name: consumer-app
+spec:
+  selector:
+    app: consumer-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: consumer-app
+  labels: {}
+spec:
+  to:
+    kind: Service
+    name: consumer-app
+  port:
+    targetPort: 8080

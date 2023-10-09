@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: device-app
+  labels:
+    app: iot-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iot-demo
+  template:
+    metadata:
+      labels:
+        app: iot-demo
+    spec:
+      containers:
+        - name: device-app
+          image: strimzilab/device-app:latest
+          env:
+            - name: BOOTSTRAP_SERVERS
+              value: "my-cluster-kafka-bootstrap:9092"
+            - name: TOPIC_TEMPERATURE
+              value: "iot-temperature"
+            - name: DELAY
+              value: "1000"
+            - name: MIN_TEMPERATURE
+              value: "15"
+            - name: MAX_TEMPERATURE
+              value: "25"

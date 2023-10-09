@@ -7,7 +7,7 @@
     grafana_password: admin
     insecure_skip_tls_verify: true
     delete_workshop: false
-    ocp_username: "{{ocp4_workload_authentication_admin_user|default('opentlc-mgr',true)}}"
+    ocp_username: admin
     debug_enable: false
     num_users: 1
     
@@ -19,12 +19,7 @@
     user_access_token: "openshift"
 
     # CHE configuration
-    workshop_openshift_user_name: userX
-    workshop_openshift_user_password: openshift
-    workshop_che_user_name: userX
-    workshop_che_user_password: openshift
     che_project: che
-
 
     # provision_webapp
     solution_explorer_client_id: tutorial-web-app
@@ -56,24 +51,24 @@
        - token|trim() != ""
       ignore_errors: no
 
-    - name: Include Solution Explorer Role
-      include_role:
-        name: solution-explorer
-      when: not delete_workshop
-
-    - name: Include Username Distribution
-      when:
-        - num_users | int > 0
-        - not delete_workshop
-      include_role:
-        name: username-distribution
-    
-    # - name: Provision OpenShift Dev Spaces
+    # - name: Include Solution Explorer Role
     #   include_role:
-    #     name: devspaces
-    #   vars:
-    #     operators_project: "openshift-operators"
-    #     snapshot_operator_project: "openshift-marketplace"
+    #     name: solution-explorer
+    #   when: not delete_workshop
+
+    # - name: Include Username Distribution
+    #   when:
+    #     - num_users | int > 0
+    #     - not delete_workshop
+    #   include_role:
+    #     name: username-distribution
+    
+    - name: Provision OpenShift Dev Spaces
+      include_role:
+        name: devspaces
+      vars:
+        operators_project: "openshift-operators"
+        snapshot_operator_project: "openshift-marketplace"
 
     # - name: output workshop info
     #   msg: "{{ item }}"

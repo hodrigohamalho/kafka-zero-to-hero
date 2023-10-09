@@ -1,18 +1,18 @@
 ---
 
-- name: Evaluate {{ operators_project }} namespace if not exists
-  k8s:
-    api_version: v1
-    kind: Namespace
-    name: '{{ operators_project }}'
-    state: present
+# - name: Evaluate {{ operators_project }} namespace if not exists
+#   k8s:
+#     api_version: v1
+#     kind: Namespace
+#     name: '{{ operators_project }}'
+#     state: present
 
-- name: Evaluate Operator Group
-  k8s:
-    api_version: operators.coreos.com/v1
-    kind: OperatorGroup
-    name: workshop-operators
-    namespace: '{{ operators_project }}'
+# - name: Evaluate Operator Group
+#   k8s:
+#     api_version: operators.coreos.com/v1
+#     kind: OperatorGroup
+#     name: workshop-operators
+#     namespace: '{{ operators_project }}'
 
 # - name: Evaluate OpenShift Dev Spaces Subscription
 #   k8s:

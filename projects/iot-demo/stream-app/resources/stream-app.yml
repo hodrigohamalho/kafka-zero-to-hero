@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stream-app
+  labels:
+    app: iot-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iot-demo
+  template:
+    metadata:
+      labels:
+        app: iot-demo
+        name: stream-app
+    spec:
+      containers:
+        - name: stream-app
+          image: strimzilab/stream-app:latest
+          env:
+            - name: BOOTSTRAP_SERVERS
+              value: "my-cluster-kafka-bootstrap:9092"
+            - name: TOPIC_TEMPERATURE
+              value: "iot-temperature"
+            - name: TOPIC_TEMPERATURE_MAX
+              value: "iot-temperature-max"
+            - name: TEMPERATURE_THRESHOLD
+              value: "20"
+            - name: TEMPERATURE_WINDOW_SIZE
+              value: "5"
