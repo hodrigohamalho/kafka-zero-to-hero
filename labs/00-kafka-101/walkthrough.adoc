@@ -263,59 +263,11 @@ image::images/ui-list-topics.png[]
 Easier from the UI, isn't it? :-)
 
 [time=5]
-== Deploy an application to Produce/Consume from Kafka
-
-Take note of the bootstrap service from your kafka cluster. We will need it in the next labs.
-
-image::2-10-2020-18-21-57-PM.png[] 
-
-And use it in the `KAFKA_BROKER` variable:
-
-[source,bash]
-----
-oc process -f vr-template.yml \
-  -p NAMESPACE=$KAFKA_NAMESPACE \
-  -p KAFKA_BROKER=my-cluster-kafka-bootstrap:9092 \
-  -p KAFKA_TOPIC=third-topic \
-  -p SUBDOMAIN=$SUBDOMAIN \
-  | oc apply -f -
-----
-
-After running this, we will see a new application in the developer console:
-
-image::3-10-2020-10-38-26-AM.png[] 
-
-Now, Open the Camel VR Route
-
-image::3-10-2020-10-40-09-AM.png[] 
-
-We will see the VR Application:
-
-image::3-10-2020-10-45-08-AM.png[] 
-
-Now click many times on the `Send Event` to send message to the `third-topic`:
-
-image::3-10-2020-10-45-53-AM.png[] 
-
-We will see the message flowing throught the kafka Consumer and the offset 0 will be created.
-
-image::3-10-2020-10-47-19-AM.png[] 
-
-Now open the swagger url:
-
-image::3-10-2020-10-48-41-AM.png[] 
-
-Open a new tab with the same a application URL and concatenate the following in the end of the url: `/webjars/swagger-ui/2.1.0/index.html?url=/camel/api-docs`
-
-image::3-10-2020-10-50-02-AM.png[] 
-
 === Consumer and Producer Application
 
-Now let's create another topic: `forth-topic`
+Now let's create another topic named: `forth-topic`
 
-For that, let's use the import yaml editor.
-
-image::4-10-2020-17-28-42-PM.png[] 
+Go to Add + > Operator Backed > Kafka Topic
 
 And paste the following yaml:
 
@@ -327,7 +279,6 @@ metadata:
   name: forth-topic
   labels:
     strimzi.io/cluster: my-cluster
-  namespace: kafka-demo
 spec:
   config:
     retention.ms: 604800000
@@ -337,42 +288,217 @@ spec:
   topicName: forth-topic
 ----
 
-Let's see if it was created corretly:
+Let's see if it was created corretly, go to the UI topic list, or check via command line:
 
 [source,bash]
 ----
-oc -n $KAFKA_NAMESPACE exec -it $KAFKA_BROKER_POD -c kafka -- bin/kafka-topics.sh \
+bin/kafka-topics.sh \
     --bootstrap-server $BROKER_HOST \
     --topic forth-topic \
     --describe
 ----
 
-Now let's deploy the consumer and producer.
+First let's deploy the producer, go to ADD + > Import YAML
 
-[source,bash]
+image::images/add-import-yaml.jpg[]
+
+And the paste the following code
+
+[source,yaml]
 ----
-oc process -f consumer-producer-template.yml \
-  -p NAMESPACE=$KAFKA_NAMESPACE \
-  -p TOPIC=forth-topic \
-  -p KAFKA_BROKER=my-cluster-kafka-bootstrap:9092 \
-  | oc apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-producer
+  labels:
+    app: hello-world-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world-producer
+  template:
+    metadata:
+      labels:
+        app: hello-world-producer
+    spec:
+      containers:
+      - name: hello-world-producer
+        image: strimzici/hello-world-producer:rhte
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: BOOTSTRAP_SERVERS
+            value: my-cluster-kafka-bootstrap:9092
+          - name: TOPIC
+            value: my-topic
+          - name: DELAY_MS
+            value: "1000"
+          - name: LOG_LEVEL
+            value: "INFO"
+          - name: MESSAGE_COUNT
+            value: "1000"
 ----
 
-Wait for both pods become ready and run:
+And click on `Create`.
 
-[source,bash]
+image::images/producer-yaml.png[]
+
+Check the pod logs to see if everything is working properly.
+
+image::images/producer-check-logs.jpg[]
+
+{empty} +
+
+image::images/producer-logs.png[]
+
+Repeat the same process to the consumer:
+
+[source,yaml]
 ----
-oc logs --tail 100 -f $(oc get pods -l app=hello-world-producer -o jsonpath='{.items[0].metadata.name}')
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-consumer
+  labels:
+    app: hello-world-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world-consumer
+  template:
+    metadata:
+      labels:
+        app: hello-world-consumer
+    spec:
+      containers:
+      - name: hello-world-consumer
+        image: strimzici/hello-world-consumer:rhte
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: BOOTSTRAP_SERVERS
+            value: my-cluster-kafka-bootstrap:9092
+          - name: TOPIC
+            value: my-topic
+          - name: GROUP_ID
+            value: my-group
+          - name: LOG_LEVEL
+            value: "INFO"
+          - name: MESSAGE_COUNT
+            value: "1000000"
 ----
 
-[source,bash]
+Click on `Create`.
+
+image::images/consumer-yaml.png[]
+
+Check the pod logs to see if everything is working properly.
+
+{empty} +
+
+image::images/consumer-logs.png[]
+
+[time=5]
+=== Deploying Kafka UI
+
+To better check the Kafka cluster details, let's deploy the Kafka UI.
+
+Following the same steps to `Import a YAML`, paste the following content:
+
+[source,yaml]
 ----
-oc logs --tail 100 -f $(oc get pods -l app=hello-world-consumer -o jsonpath='{.items[0].metadata.name}')
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka-ui
+  labels:
+    app: kafka-ui
+    app.kubernetes.io/component: kafka-ui
+    app.kubernetes.io/instance: kafka-ui
+    app.kubernetes.io/name: kafka-ui
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  sessionAffinity: None
+  selector:
+    app: kafka-ui
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: kafka-ui
+  labels:
+    app: kafka-ui
+    app.kubernetes.io/component: kafka-ui
+    app.kubernetes.io/instance: kafka-ui
+    app.kubernetes.io/name: kafka-ui
+    app.openshift.io/runtime-version: latest
+spec:
+  to:
+    kind: Service
+    name: kafka-ui
+    weight: 100
+  port:
+    targetPort: 8080
+  wildcardPolicy: None
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kafka-ui
+  labels:
+    app: kafka-ui
+    app.kubernetes.io/component: kafka-ui
+    app.kubernetes.io/instance: kafka-ui
+    app.kubernetes.io/name: kafka-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+        deploymentconfig: kafka-ui
+    spec:
+      containers:
+        - name: kafka-ui
+          image: docker.io/provectuslabs/kafka-ui:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: my-cluster
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: 'my-cluster-kafka-bootstrap:9092'
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 3
 ----
 
-Your terminal should be like this:
+You must see a screen like this one:
 
-image::4-10-2020-19-00-43-PM.png[] 
+image::images/kafka-ui-install.png[]
+
+Open the Route
+
+image::images/kafka-ui-1.png[]
+
+You can check the cluster details through the Kafka UI interface
+
+image::images/kafka-ui-2.png[]
+
+Access the Topics information and try to check the content of a message sent in the lab before:
+
+image::images/kafka-ui-3.png[]
+
+image::images/kafka-ui-4.png[]
 
 [time=1]
 == Summary
