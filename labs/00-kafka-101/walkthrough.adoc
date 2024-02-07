@@ -181,9 +181,12 @@ In the Kafka community, to access the list of topics you need to use a `Kafka CL
 
 . Access the broker 0 pod Terminal.
 .. From the list of Pods in the left side menu, acces the broker 0 pod, and in the tabs select `Terminal`.
-+
+
+{empty} +
 
 image::images/broker-pod.jpg[]
+
+{empty} +
 
 . List the topics using the `kafka-topics` command line tool
 
@@ -238,6 +241,8 @@ bin/kafka-topics.sh \
 
 image::images/cli-create-topic.png[]
 
+{empty} +
+
 . List the topics again to see the newly topic created.
 
 {empty} +
@@ -252,6 +257,8 @@ bin/kafka-topics.sh \
 
 image::images/cli-list-topics-2.png[]
 
+{empty} +
+
 . Take a look if the topics created by the command line is appearing in the `Kafka Topics` list in Openshift
 
 {empty} +
@@ -263,13 +270,11 @@ image::images/ui-list-topics.png[]
 Easier from the UI, isn't it? :-)
 
 [time=5]
-=== Consumer and Producer Application
+== Consumer and Producer Application
 
 Now let's create another topic named: `forth-topic`
 
-Go to Add + > Operator Backed > Kafka Topic
-
-And paste the following yaml:
+Go to `Add + > Operator Backed > Kafka Topic` and paste the following yaml:
 
 [source,yaml]
 ----
@@ -288,7 +293,7 @@ spec:
   topicName: forth-topic
 ----
 
-Let's see if it was created corretly, go to the UI topic list, or check via command line:
+Let's see if it was created corretly, go to the `Kafka topic list from Openshift UI`, or check via `command line`:
 
 [source,bash]
 ----
@@ -298,9 +303,13 @@ bin/kafka-topics.sh \
     --describe
 ----
 
-First let's deploy the producer, go to ADD + > Import YAML
+{empty} +
+
+First let's deploy the producer, go to `ADD + > Import YAML`
 
 image::images/add-import-yaml.jpg[]
+
+{empty} +
 
 And the paste the following code
 
@@ -330,7 +339,7 @@ spec:
           - name: BOOTSTRAP_SERVERS
             value: my-cluster-kafka-bootstrap:9092
           - name: TOPIC
-            value: my-topic
+            value: forth-topic
           - name: DELAY_MS
             value: "1000"
           - name: LOG_LEVEL
@@ -339,19 +348,23 @@ spec:
             value: "1000"
 ----
 
-And click on `Create`.
+And click on `Create`, your screen should be like this one:
 
 image::images/producer-yaml.png[]
 
-Check the pod logs to see if everything is working properly.
+Check the `logs` from `producer pod` to see if everything is working properly.
 
 image::images/producer-check-logs.jpg[]
 
 {empty} +
 
+The logs:
+
 image::images/producer-logs.png[]
 
-Repeat the same process to the consumer:
+{empty} +
+
+Repeat the same process to the *Consumer*:
 
 [source,yaml]
 ----
@@ -379,7 +392,7 @@ spec:
           - name: BOOTSTRAP_SERVERS
             value: my-cluster-kafka-bootstrap:9092
           - name: TOPIC
-            value: my-topic
+            value: forth-topic
           - name: GROUP_ID
             value: my-group
           - name: LOG_LEVEL
