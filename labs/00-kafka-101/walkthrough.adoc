@@ -159,6 +159,7 @@ image::images/kafka-topic-2.jpg[]
 .. Name: `first-topic`
 .. Partitions: `3`
 .. Replication Factor: 3
+
 And now click on `Create`
 
 {empty} +
@@ -175,7 +176,7 @@ image::images/kafka-topic-5.jpg[]
 
 {empty} +
 
-In the Kafka vanilla to access the list of topics you need to use a `Kafka CLI` tool to do it. Let's access the command line and see how it is performed.
+In the Kafka community, to access the list of topics you need to use a `Kafka CLI` tool to do it. Let's access the command line and see how it is performed.
 
 . Access your IDE environment in link:{devspaces-url}[Red Hat Openshift Devspaces, window="_blank"]
 
@@ -197,17 +198,24 @@ image::images/broker-pod.jpg[]
 
 . List the topics using the `kafka-topics` command line tool
 
+{empty} +
+
 [source,bash]
 ----
 bin/kafka-topics.sh \
     --list \
     --bootstrap-server my-cluster-kafka-bootstrap:9092
 ----
-+
+
+{empty} +
 
 image::images/cli-list-topics.jpg[]
 
+{empty} +
+
 . Describe the topic `first-topic`
+
+{empty} +
 
 [source,bash]
 ----
@@ -216,11 +224,16 @@ bin/kafka-topics.sh \
     --topic first-topic \
     --describe
 ----
-+
+
+{empty} +
 
 image::images/cli-describe-topic.png[]
 
+{empty} +
+
 . Now let's create a new topic still using the command line, named `second-topic`
+
+{empty} +
 
 [source,bash]
 ----
@@ -231,25 +244,32 @@ bin/kafka-topics.sh \
     --partitions 2 \
     --topic second-topic
 ----
-+
+
+{empty} +
 
 image::images/cli-create-topic.png[]
 
 . List the topics again to see the newly topic created.
+
+{empty} +
 
 ----
 bin/kafka-topics.sh \
     --list \
     --bootstrap-server my-cluster-kafka-bootstrap:9092
 ----
-+
+
+{empty} +
 
 image::images/cli-list-topics-2.png[]
 
 . Take a look if the topics created by the command line is appearing in the `Kafka Topics` list in Openshift
-+
+
+{empty} +
 
 image::images/ui-list-topics.png[]
+
+{empty} +
 
 Easier from the UI, isn't it? :-)
 
