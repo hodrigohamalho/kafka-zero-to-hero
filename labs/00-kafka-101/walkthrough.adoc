@@ -188,6 +188,7 @@ image::images/devspaces-2.png[]
 . Access the broker 0 pod Terminal.
 .. From the list of Pods in the left side menu, acces the broker 0 pod, and in the tabs select `Terminal`.
 +
+
 image::images/broker-pod.jpg[]
 
 . List the topics using the `kafka-topics` command line tool
@@ -199,6 +200,7 @@ bin/kafka-topics.sh \
     --bootstrap-server my-cluster-kafka-bootstrap:9092
 ----
 +
+
 image::images/cli-list-topics.jpg[]
 
 . Describe the topic `first-topic`
@@ -211,6 +213,7 @@ bin/kafka-topics.sh \
     --describe
 ----
 +
+
 image::images/cli-describe-topic.jpg[]
 
 . Now let's create a new topic still using the command line, named `second-topic`
@@ -225,6 +228,7 @@ bin/kafka-topics.sh \
     --topic second-topic
 ----
 +
+
 image::images/cli-create-topic.jpg[]
 
 . List the topics again to see the newly topic created.
@@ -235,10 +239,12 @@ bin/kafka-topics.sh \
     --bootstrap-server my-cluster-kafka-bootstrap:9092
 ----
 +
+
 image::images/cli-list-topics-2.png[]
 
 . Take a look if the topics created by the command line is appearing in the `Kafka Topics` list in Openshift
 +
+
 image::images/ui-list-topics.png[]
 
 Easier from the UI, isn't it? :-)
