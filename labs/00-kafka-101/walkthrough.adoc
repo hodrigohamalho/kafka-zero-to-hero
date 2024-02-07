@@ -40,7 +40,11 @@ Access the link:{openshift-url}[Openshift Console, window="_blank"] and login us
 
 Our first step is to install the `AMQ Streams Operator`. As there are many students using this environment the role to install operator needed to be removed from your user. 
 
-The Operator is already installed for you, so you can just skip to the next topic.
+Besides you are seeing the following screen, The Operator is already installed for you, so you can just skip to the next topic.
+
+image::images/operators-installed.jpg[Restricted Access] 
+
+This is the operators installed from a administrator perspective.
 
 image::images/operators-installed.jpg[Installed Operators] 
 
