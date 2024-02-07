@@ -124,8 +124,6 @@ image::images/pod-list.jpg[]
 The pods are not showing in the `Topology` view, because it's Strimzi Pod Sets, if you need to know more about that, https://strimzi.io/blog/2022/05/23/strimzipodsets-what-it-is-and-why-should-you-care/[take a look on this video] from `Jakub Scholz`
 ====
 
-{empty} +
-
 The Kafka Cluster is already installed and ready to use. 
 
 {empty} +
@@ -159,36 +157,27 @@ image::images/kafka-topic-2.jpg[]
 .. Name: `first-topic`
 .. Partitions: `3`
 .. Replication Factor: 3
-
-And now click on `Create`
-
-{empty} +
+.. Click on `Create`
 
 image::images/kafka-topic-3.jpg[] 
 
+{empty} +
+
 . Look at the `YAML View`.
-+
+
+{empty} +
+
 image::images/kafka-topic-4.png[] 
 
 . To check the complete list of the topics, access the `Kafka Topics` in the left side menu. 
-+
+
+{empty} +
+
 image::images/kafka-topic-5.jpg[] 
 
-{empty} +
+== Topics from the Command Line
 
 In the Kafka community, to access the list of topics you need to use a `Kafka CLI` tool to do it. Let's access the command line and see how it is performed.
-
-. Access your IDE environment in link:{devspaces-url}[Red Hat Openshift Devspaces, window="_blank"]
-
-. Click in `Open`
-+
-image::images/devspaces-1.jpg[]
-
-{empty} +
-
-image::images/devspaces-2.png[]
-
-== Topics from the Command Line
 
 . Access the broker 0 pod Terminal.
 .. From the list of Pods in the left side menu, acces the broker 0 pod, and in the tabs select `Terminal`.
